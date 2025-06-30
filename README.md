@@ -11,6 +11,14 @@ FusioMR implements fusion framework for Mendelian Randomization analysis.
 
 You can install the development version of FusioMR from [GitHub](https://github.com/kangbw702/FusioMR/) with:
 
+```r
+# Install devtools if you don't have it
+install.packages("devtools")
+
+# Install FusioMR from your GitHub repository
+devtools::install_github("kangbw702/FusioMR")
+```
+
 ## Quick Start
 
 ```r
