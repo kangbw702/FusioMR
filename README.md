@@ -75,7 +75,7 @@ The `fusiomr()` function returns a list containing:
 If you use FusioMR in your research, please cite:
 
 ```
-[citation information here]
+[...citation information]
 ```
 
 ## License
