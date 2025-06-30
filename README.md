@@ -43,7 +43,6 @@ result <- fusiomr(
 
 # View results
 print(result)
-summary(result)
 ```
 
 ## Methods
