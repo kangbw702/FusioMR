@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "README"
 output: html_document
@@ -92,3 +93,8 @@ This project is licensed under the GPL-3 License - see the [LICENSE](LICENSE) fi
 ## Contact
 
 For questions and support, please contact [your email] or open an issue on GitHub.
+=======
+# FusioMR
+
+A method designed for single-outcome and multi-outcome transcriptome-wide Mendelian randomization analysis using summary statistics.
+>>>>>>> fbac764d9d859209e28944c08209f544170350d8
