@@ -1,4 +1,3 @@
-
 ---
 title: "README"
 output: html_document
@@ -6,18 +5,11 @@ output: html_document
 
 # FusioMR
 
-[![R-CMD-check](https://github.com/yourusername/FusioMR/workflows/R-CMD-check/badge.svg)](https://github.com/yourusername/FusioMR/actions)
-
-FusioMR implements fusion methods for Mendelian Randomization analysis using Bayesian approaches with Gibbs sampling.
+FusioMR implements fusion framework for Mendelian Randomization analysis.
 
 ## Installation
 
-You can install the development version of FusioMR from [GitHub](https://github.com/) with:
-
-```r
-# install.packages("devtools")
-devtools::install_github("yourusername/FusioMR")
-```
+You can install the development version of FusioMR from [GitHub](https://github.com/kangbw702/FusioMR/) with:
 
 ## Quick Start
 
@@ -83,7 +75,7 @@ The `fusiomr()` function returns a list containing:
 If you use FusioMR in your research, please cite:
 
 ```
-[Your citation information here]
+[citation information here]
 ```
 
 ## License
@@ -92,9 +84,5 @@ This project is licensed under the GPL-3 License - see the [LICENSE](LICENSE) fi
 
 ## Contact
 
-For questions and support, please contact [your email] or open an issue on GitHub.
-=======
-# FusioMR
+For questions and support, please contact [...] or open an issue on GitHub.
 
-A method designed for single-outcome and multi-outcome transcriptome-wide Mendelian randomization analysis using summary statistics.
->>>>>>> fbac764d9d859209e28944c08209f544170350d8
