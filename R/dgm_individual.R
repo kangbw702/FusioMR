@@ -1,4 +1,4 @@
-#' Generate Simulated GWAS Data
+#'Generating simulated individual-level Data FusioMR Analysis
 #'
 #' @description
 #' This function generates simulated individual-level data for two-sample
@@ -76,8 +76,7 @@
 #' )
 #'
 #' @export
-#' @author [Your Name]
-#' @seealso \code{\link{dgm_summary}} for summary-level GWAS data generation
+#'
 dgm_individual <- function(m, nx, ny, a_gamma, b_gamma, a_f, b_f,
                            a_alpha, b_alpha, theta) {
 
@@ -98,8 +97,8 @@ dgm_individual <- function(m, nx, ny, a_gamma, b_gamma, a_f, b_f,
     stop("MAF bounds must satisfy 0 <= a_f < b_f <= 1")
   }
 
-  if (a_alpha >= b_alpha) {
-    stop("a_alpha must be less than b_alpha")
+  if (a_alpha > b_alpha || (a_alpha == b_alpha && a_alpha != 0)) {
+    stop("a_alpha must be less than or equal to b_alpha (equal only when both are 0)")
   }
 
   # Generate IV-to-exposure effects (instrument strength)

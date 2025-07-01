@@ -26,9 +26,11 @@ fusiomr(
 \value{
 A list containing:
 \describe{
-  \item{beta_estimate}{Posterior mean of causal effect}
-  \item{beta_se}{Posterior standard error}
-  \item{beta_ci}{95 percent credible interval}
+  \item{est}{Posterior mean of causal effect}
+  \item{se}{Posterior standard error}
+  \item{pval}{P-value for causal effect}
+  \item{ci_emp}{95 percent empirical credible interval}
+  \item{ci_normal}{95 percent normal-approximation confidence interval}
   \item{beta_samples}{MCMC samples (post burn-in)}
   \item{type}{Model type used}
   \item{n_ivs}{Number of instrumental variables selected}

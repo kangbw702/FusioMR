@@ -106,23 +106,16 @@ fusiomr <- function(summary_stats_raw,
   # Store all the results
   result <- list(
     # Main results
-    est = est,
-    se = se,
+    beta_estimate = est,
+    beta_se = se,
     pval = pval,
-    ci_emp = c(ci_lower_emp, ci_upper_emp),
+    beta_ci = c(ci_lower_emp, ci_upper_emp),
     ci_normal = c(ci_lower_norm, ci_upper_norm),
 
-    # MCMC samples
     beta_samples = beta_post_burnin,
-
-    # Method information
     type = type,
     n_ivs = nrow(summary_stats_selected_result),
-
-    # Selected data
     selected_stats = summary_stats_selected_result,
-
-    # MCMC settings
     niter = niter,
     burnin_prop = burnin_prop
   )
