@@ -35,9 +35,6 @@ result <- fusiomr(
   niter = 10000,
   burnin_prop = 0.5
 )
-
-# View results
-print(result)
 ```
 
 ## Methods
