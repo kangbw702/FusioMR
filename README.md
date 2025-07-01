@@ -1,8 +1,3 @@
----
-title: "README"
-output: html_document
----
-
 # FusioMR
 
 FusioMR implements fusion framework for Mendelian Randomization analysis.
