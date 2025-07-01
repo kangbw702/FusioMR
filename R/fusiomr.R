@@ -106,17 +106,10 @@ fusiomr <- function(summary_stats_raw,
   # Store all the results
   result <- list(
     # Main results
-<<<<<<< HEAD
     beta_estimate = est,
     beta_se = se,
     pval = pval,
     beta_ci = c(ci_lower_emp, ci_upper_emp),
-=======
-    est = est,
-    se = se,
-    pval = pval,
-    ci_emp = c(ci_lower_emp, ci_upper_emp),
->>>>>>> 541a929e1be65bf921e879b0f9d822e9091baf15
     ci_normal = c(ci_lower_norm, ci_upper_norm),
 
     beta_samples = beta_post_burnin,

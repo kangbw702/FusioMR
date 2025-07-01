@@ -1,11 +1,3 @@
-<<<<<<< HEAD
----
-title: "README"
-output: html_document
----
-
-=======
->>>>>>> 541a929e1be65bf921e879b0f9d822e9091baf15
 # FusioMR
 
 FusioMR implements fusion framework for Mendelian Randomization analysis.
@@ -95,4 +87,3 @@ This project is licensed under the GPL-3 License - see the [LICENSE](LICENSE) fi
 ## Contact
 
 For questions and support, please contact [...] or open an issue on GitHub.
-
