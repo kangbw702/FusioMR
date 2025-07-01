@@ -13,7 +13,9 @@
 #' \describe{
 #'   \item{beta_estimate}{Posterior mean of causal effect}
 #'   \item{beta_se}{Posterior standard error}
-#'   \item{beta_ci}{95 percent credible interval}
+#'   \item{pval}{P-value for causal effect}
+#'   \item{beta_ci_emp}{95 percent empirical credible interval}
+#'   \item{beta_ci_normal}{95 percent normal-approximation confidence interval}
 #'   \item{beta_samples}{MCMC samples (post burn-in)}
 #'   \item{type}{Model type used}
 #'   \item{n_ivs}{Number of instrumental variables selected}
@@ -84,17 +86,31 @@ fusiomr <- function(summary_stats_raw,
   burnin_n <- floor(niter * burnin_prop)
   beta_post_burnin <- gibbs_beta_est[(burnin_n + 1):niter]
 
+  # Causal effect estimate
   beta_estimate <- mean(beta_post_burnin)
-  beta_se <- stats::sd(beta_post_burnin)
-  beta_ci_lower <- stats::quantile(beta_post_burnin, 0.025)
-  beta_ci_upper <- stats::quantile(beta_post_burnin, 0.975)
 
-  # Prepare comprehensive results
+  # Standard Error
+  beta_se <- stats::sd(beta_post_burnin)
+
+  # P-value calculation
+  beta_pvalue <- 2 * exp(stats::pnorm(abs(beta_estimate) / beta_se, lower.tail = FALSE, log.p = TRUE))
+
+  # Empirical credible interval (quantile-based)
+  beta_ci_lower_emp <- stats::quantile(beta_post_burnin, 0.025)
+  beta_ci_upper_emp <- stats::quantile(beta_post_burnin, 0.975)
+
+  # Normal approximation confidence interval (critical value approach)
+  beta_ci_lower_normal <- beta_estimate - 1.96 * beta_se
+  beta_ci_upper_normal <- beta_estimate + 1.96 * beta_se
+
+  # Store all the results
   result <- list(
     # Main results
     beta_estimate = beta_estimate,
     beta_se = beta_se,
-    beta_ci = c(beta_ci_lower, beta_ci_upper),
+    beta_pvalue = beta_pvalue,
+    beta_ci_emp = c(beta_ci_lower_emp, beta_ci_upper_emp),
+    beta_ci_normal = c(beta_ci_lower_normal, beta_ci_upper_normal),
 
     # MCMC samples
     beta_samples = beta_post_burnin,
@@ -112,10 +128,12 @@ fusiomr <- function(summary_stats_raw,
   )
 
   # Print summary
-  cat("\nStep3: Results Summary...\n")
+  cat("\nStep 3: Results Summary...\n")
   cat("Causal effect estimate (beta):", round(beta_estimate, 4), "\n")
   cat("Standard error:", round(beta_se, 4), "\n")
-  cat("95% Credible interval: [", round(beta_ci_lower, 4), ",", round(beta_ci_upper, 4), "]\n")
+  cat("P-value:", formatC(beta_pvalue, format = "e", digits = 3), "\n")
+  cat("95% Empirical credible interval: [", round(beta_ci_lower_emp, 4), ",", round(beta_ci_upper_emp, 4), "]\n")
+  cat("95% Normal approximation CI: [", round(beta_ci_lower_normal, 4), ",", round(beta_ci_upper_normal, 4), "]\n")
   cat("Number of IVs used:", nrow(summary_stats_selected_result), "\n\n")
   cat("=== FusioMR Analysis Completed ===\n\n")
 
