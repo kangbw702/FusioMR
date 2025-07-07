@@ -109,7 +109,7 @@ fusiomr <- function(summary_stats_raw,
     beta_estimate = est,
     beta_se = se,
     pval = pval,
-    beta_ci = c(ci_lower_emp, ci_upper_emp),
+    ci_emp = c(ci_lower_emp, ci_upper_emp),
     ci_normal = c(ci_lower_norm, ci_upper_norm),
 
     beta_samples = beta_post_burnin,

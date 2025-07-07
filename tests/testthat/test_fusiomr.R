@@ -14,7 +14,8 @@ test_that("fusiomr basic functionality works", {
 
   expect_s3_class(result, "fusiomr")
   expect_true(is.numeric(result$beta_estimate))
-  expect_true(length(result$beta_ci) == 2)
+  expect_true(length(result$ci_emp) == 2)
+  expect_true(length(result$ci_norm) == 2)
 })
 
 test_that("fusiomr works with valid input", {
@@ -37,7 +38,8 @@ test_that("fusiomr works with valid input", {
   expect_s3_class(result, "fusiomr")
   expect_true(is.numeric(result$beta_estimate))
   expect_true(is.numeric(result$beta_se))
-  expect_equal(length(result$beta_ci), 2)
+  expect_equal(length(result$ci_emp), 2)
+  expect_equal(length(result$ci_norm), 2)
   expect_equal(result$type, "seso_uhp_only")
 })
 
@@ -45,7 +47,7 @@ test_that("summary_stats_selected works correctly", {
   # Create sample data
   set.seed(456)
   summary_stats <- data.frame(
-    b_exp = c(0.5, 0.1, 0.01, 0.8),  # Mix of strong and weak effects
+    b_exp = c(0.5, 0.1, 0.01, 0.8),
     se_exp = c(0.1, 0.05, 0.02, 0.15),
     b_out = rnorm(4),
     se_out = runif(4, 0.01, 0.05)
