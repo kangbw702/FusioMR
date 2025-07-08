@@ -21,7 +21,6 @@ arma::mat mvrnormArma(int n, arma::vec mu, arma::mat sigma) {
   return arma::repmat(mu, 1, n).t() + Y * arma::chol(sigma);
 }
 
-
 List gibbs_semo_uhp_only(int niter,
                          NumericVector Gamma_hat_1,
                          NumericVector Gamma_hat_2,
@@ -188,7 +187,7 @@ List gibbs_semo_uhp_only(int niter,
 
   List res = List::create(
     Named("beta_1") = beta_1_tk,
-    Named("beta_2") = beta_2_tk,
+    Named("beta_2") = beta_2_tk
   );
   return res;
 }
