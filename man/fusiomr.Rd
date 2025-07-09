@@ -2,43 +2,64 @@
 % Please edit documentation in R/fusiomr.R
 \name{fusiomr}
 \alias{fusiomr}
-\title{FusioMR: Main Function for MR analysis}
+\title{FusioMR: Main Function for Mendelian Randomization Analysis}
 \usage{
 fusiomr(
-  summary_stats_raw,
-  type,
+  b_exp,
+  se_exp,
+  b_out,
+  se_out,
+  CHP = FALSE,
   p_value_threshold = 0.001,
   niter = 20000,
   burnin_prop = 0.5
 )
 }
 \arguments{
-\item{summary_stats_raw}{A data frame with 4 columns: b_exp, se_exp, b_out, se_out}
+\item{b_exp}{Numeric matrix or vector of effect estimates for instrumental variables
+on exposure. Must have exactly 1 column and same number of rows as other inputs.}
 
-\item{type}{A string specifying model type}
+\item{se_exp}{Numeric matrix or vector of standard errors for IV-exposure effect
+estimates. Must have exactly 1 column, same dimensions as b_exp, and all positive values.}
 
-\item{p_value_threshold}{P-value threshold for IV selection (default: 1e-3)}
+\item{b_out}{Numeric matrix or vector of effect estimates for instrumental variables
+on outcome(s). Must have 1 column (single outcome) or 2 columns (multiple outcomes),
+with same number of rows as b_exp.}
 
-\item{niter}{Number of MCMC iterations (default: 20000)}
+\item{se_out}{Numeric matrix or vector of standard errors for IV-outcome effect
+estimates. Must have same dimensions as b_out and all positive values.}
 
-\item{burnin_prop}{Proportion of iterations to discard as burn-in (default: 0.5)}
+\item{CHP}{Logical indicating whether to include horizontal pleiotropy correction
+(default: FALSE).}
+
+\item{p_value_threshold}{Numeric value between 0 and 1 for IV selection threshold
+(default: 1e-3). Used to filter instruments based on IV-exposure association strength.}
+
+\item{niter}{Positive integer specifying number of Gibbs sampling iterations
+(default: 20000).}
+
+\item{burnin_prop}{Numeric value between 0 and 1 specifying proportion of iterations
+  to discard as burn-in (default: 0.5).
+
+\itemize{
+  \item Model 1: Single Exposure Single Outcome (No Horizontal Pleiotropy)
+  \item Model 2: Single Exposure Single Outcome (With Horizontal Pleiotropy)
+  \item Model 3: Single Exposure Multiple Outcomes (No Horizontal Pleiotropy)
+  \item Model 4: Single Exposure Multiple Outcomes (With Horizontal Pleiotropy)
+}}
 }
 \value{
 A list containing:
 \describe{
-  \item{est}{Posterior mean of causal effect}
-  \item{se}{Posterior standard error}
-  \item{pval}{P-value for causal effect}
-  \item{ci_emp}{95 percent empirical credible interval}
-  \item{ci_normal}{95 percent normal-approximation confidence interval}
-  \item{beta_samples}{MCMC samples (post burn-in)}
-  \item{type}{Model type used}
-  \item{n_ivs}{Number of instrumental variables selected}
-  \item{selected_stats}{Selected summary statistics}
-  \item{niter}{Number of MCMC iterations}
-  \item{burnin_prop}{Burn-in proportion used}
+  \item{est}{Numeric vector of posterior mean(s) of causal effect. Single value for
+    single outcome, vector of length 2 for multiple outcomes.}
+  \item{se}{Numeric vector of posterior standard error(s) of causal effect. Single value
+    for single outcome, vector of length 2 for multiple outcomes.}
+  \item{pval}{Numeric vector of p-value(s) for testing null hypothesis of no causal effect.
+    Single value for single outcome, vector of length 2 for multiple outcomes.}
 }
 }
 \description{
-A Flexible, Unified and verSatile Mendelian Randomization framework
+A Flexible, Unified and verSatile Mendelian Randomization framework.
+Supports both single and multiple outcome analyses with optional horizontal pleiotropy.
 }

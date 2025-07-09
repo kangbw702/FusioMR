@@ -10,7 +10,8 @@ using namespace arma;
 NumericVector gibbs_seso_nohp(int niter,
                               NumericVector Gamma_hat,
                               NumericVector gamma_hat,
-                              NumericVector s2_hat_Gamma) {
+                              NumericVector s2_hat_Gamma,
+                              NumericVector s2_hat_gamma) {
   // define K
   int K = gamma_hat.size();
   NumericVector beta_tk(niter);
@@ -22,8 +23,8 @@ NumericVector gibbs_seso_nohp(int niter,
   // setup priors
   double a_gamma = std::max(2.0, K / 4.0);
   double sum_gamma_var = 0.0;
-  for (int k = 0; k < K; ++k) {
-    sum_gamma_var += std::max(0.0, gamma_hat[k] * gamma_hat[k]);
+  for (int k = 0; k < K; k++) {
+    sum_gamma_var += std::max(0.0, gamma_hat[k] * gamma_hat[k] - s2_hat_gamma[k]);
   }
   double mean_gamma_var = sum_gamma_var / K;
   double b_gamma = std::max(1e-6, mean_gamma_var * (a_gamma - 1.0));
@@ -39,11 +40,6 @@ NumericVector gibbs_seso_nohp(int niter,
   beta_tk[0] = beta_cur;
   gamma_tk(0, _) = gamma_cur;
   sigma2_gamma_tk[0] = sigma2_gamma_cur;
-
-  NumericVector s2_hat_gamma(K);
-  for (int k = 0; k < K; k++) {
-    s2_hat_gamma[k] = std::max(1e-6, gamma_hat[k] * gamma_hat[k] * 0.1); // 10% of squared estimate
-  }
 
   // Gibbs
   for (int iter = 0; iter < (niter-1); iter++) {

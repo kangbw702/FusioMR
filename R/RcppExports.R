@@ -5,8 +5,8 @@ fastSigLm <- function(y, X) {
     .Call(`_FusioMR_fastSigLm`, y, X)
 }
 
-gibbs_seso_nohp <- function(niter, Gamma_hat, gamma_hat, s2_hat_Gamma) {
-    .Call(`_FusioMR_gibbs_seso_nohp`, niter, Gamma_hat, gamma_hat, s2_hat_Gamma)
+gibbs_seso_nohp <- function(niter, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_gamma) {
+    .Call(`_FusioMR_gibbs_seso_nohp`, niter, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_gamma)
 }
 
 gibbs_seso_uhp_only <- function(niter, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_gamma) {

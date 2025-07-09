@@ -24,8 +24,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // gibbs_seso_nohp
-NumericVector gibbs_seso_nohp(int niter, NumericVector Gamma_hat, NumericVector gamma_hat, NumericVector s2_hat_Gamma);
-RcppExport SEXP _FusioMR_gibbs_seso_nohp(SEXP niterSEXP, SEXP Gamma_hatSEXP, SEXP gamma_hatSEXP, SEXP s2_hat_GammaSEXP) {
+NumericVector gibbs_seso_nohp(int niter, NumericVector Gamma_hat, NumericVector gamma_hat, NumericVector s2_hat_Gamma, NumericVector s2_hat_gamma);
+RcppExport SEXP _FusioMR_gibbs_seso_nohp(SEXP niterSEXP, SEXP Gamma_hatSEXP, SEXP gamma_hatSEXP, SEXP s2_hat_GammaSEXP, SEXP s2_hat_gammaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,7 +33,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type Gamma_hat(Gamma_hatSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gamma_hat(gamma_hatSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type s2_hat_Gamma(s2_hat_GammaSEXP);
-    rcpp_result_gen = Rcpp::wrap(gibbs_seso_nohp(niter, Gamma_hat, gamma_hat, s2_hat_Gamma));
+    Rcpp::traits::input_parameter< NumericVector >::type s2_hat_gamma(s2_hat_gammaSEXP);
+    rcpp_result_gen = Rcpp::wrap(gibbs_seso_nohp(niter, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_gamma));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -55,7 +56,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_FusioMR_fastSigLm", (DL_FUNC) &_FusioMR_fastSigLm, 2},
-    {"_FusioMR_gibbs_seso_nohp", (DL_FUNC) &_FusioMR_gibbs_seso_nohp, 4},
+    {"_FusioMR_gibbs_seso_nohp", (DL_FUNC) &_FusioMR_gibbs_seso_nohp, 5},
     {"_FusioMR_gibbs_seso_uhp_only", (DL_FUNC) &_FusioMR_gibbs_seso_uhp_only, 5},
     {NULL, NULL, 0}
 };
