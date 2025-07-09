@@ -109,19 +109,12 @@ fusiomr <- function(b_exp,
 
   cat("Input validation completed.\n")
 
-  # Determine model type
-  n_outcomes <- ncol(b_out)
-  n_ivs <- nrow(b_exp)
-  # Print basic model info
-  cat(sprintf("Number of IVs: %d\n", n_ivs))
-  cat(sprintf("Number of outcomes: %d\n", n_outcomes))
-  cat(sprintf("Horizontal pleiotropy: %s\n", ifelse(CHP, "Yes", "No")))
-
-
   # IV selection
   cat("Performing instrumental variable selection...\n")
   sel_ivs_idx <- get_sel_idx(b_exp, se_exp, p_value_threshold)
   n_sel <- sum(sel_ivs_idx)
+  n_outcomes <- ncol(b_out)
+  n_ivs <- nrow(b_exp)
   cat(sprintf("Selected %d out of %d instruments (p < %g)\n", n_sel, n_ivs, p_value_threshold))
 
   if (n_sel < 3) {
@@ -222,6 +215,6 @@ fusiomr <- function(b_exp,
     }
   }
 
-  cat("\n=== Analysis Complete ===\n")
+  cat("\n=== Analysis Complete ===\n \n")
   return(results)
 }

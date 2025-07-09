@@ -23,6 +23,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gibbs_semo_nohp
+List gibbs_semo_nohp(int niter, NumericVector Gamma_hat_1, NumericVector Gamma_hat_2, NumericVector gamma_hat, NumericVector s2_hat_Gamma_1, NumericVector s2_hat_Gamma_2, NumericVector s2_hat_gamma);
+RcppExport SEXP _FusioMR_gibbs_semo_nohp(SEXP niterSEXP, SEXP Gamma_hat_1SEXP, SEXP Gamma_hat_2SEXP, SEXP gamma_hatSEXP, SEXP s2_hat_Gamma_1SEXP, SEXP s2_hat_Gamma_2SEXP, SEXP s2_hat_gammaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type niter(niterSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Gamma_hat_1(Gamma_hat_1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Gamma_hat_2(Gamma_hat_2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type gamma_hat(gamma_hatSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type s2_hat_Gamma_1(s2_hat_Gamma_1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type s2_hat_Gamma_2(s2_hat_Gamma_2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type s2_hat_gamma(s2_hat_gammaSEXP);
+    rcpp_result_gen = Rcpp::wrap(gibbs_semo_nohp(niter, Gamma_hat_1, Gamma_hat_2, gamma_hat, s2_hat_Gamma_1, s2_hat_Gamma_2, s2_hat_gamma));
+    return rcpp_result_gen;
+END_RCPP
+}
 // gibbs_seso_nohp
 NumericVector gibbs_seso_nohp(int niter, NumericVector Gamma_hat, NumericVector gamma_hat, NumericVector s2_hat_Gamma, NumericVector s2_hat_gamma);
 RcppExport SEXP _FusioMR_gibbs_seso_nohp(SEXP niterSEXP, SEXP Gamma_hatSEXP, SEXP gamma_hatSEXP, SEXP s2_hat_GammaSEXP, SEXP s2_hat_gammaSEXP) {
@@ -56,6 +73,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_FusioMR_fastSigLm", (DL_FUNC) &_FusioMR_fastSigLm, 2},
+    {"_FusioMR_gibbs_semo_nohp", (DL_FUNC) &_FusioMR_gibbs_semo_nohp, 7},
     {"_FusioMR_gibbs_seso_nohp", (DL_FUNC) &_FusioMR_gibbs_seso_nohp, 5},
     {"_FusioMR_gibbs_seso_uhp_only", (DL_FUNC) &_FusioMR_gibbs_seso_uhp_only, 5},
     {NULL, NULL, 0}

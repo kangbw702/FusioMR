@@ -21,6 +21,7 @@ arma::mat mvrnormArma(int n, arma::vec mu, arma::mat sigma) {
   return arma::repmat(mu, 1, n).t() + Y * arma::chol(sigma);
 }
 
+// [[Rcpp::export]]
 List gibbs_semo_nohp(int niter,
                          NumericVector Gamma_hat_1,
                          NumericVector Gamma_hat_2,
