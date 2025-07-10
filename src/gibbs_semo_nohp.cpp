@@ -40,6 +40,11 @@ List gibbs_semo_nohp(int niter,
 
   // prior setup
   int K = gamma_hat.size();
+  if (Gamma_hat_1.size() != K || Gamma_hat_2.size() != K ||
+      s2_hat_Gamma_1.size() != K || s2_hat_Gamma_2.size() != K || s2_hat_gamma.size() != K) {
+    Rcpp::stop("Input vectors to gibbs_semo_nohp() must all be the same length");
+  }
+
   arma::vec gamma_hat_vec = as<arma::vec>(gamma_hat);
   arma::vec Gamma_hat_1_vec = as<arma::vec>(Gamma_hat_1);
   arma::vec Gamma_hat_2_vec = as<arma::vec>(Gamma_hat_2);

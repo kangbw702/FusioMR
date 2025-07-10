@@ -188,7 +188,7 @@ fusiomr <- function(b_exp,
       cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
 
       beta_est <- gibbs_semo_nohp(niter, b_out[, 1], b_out[, 2], b_exp,
-                                  se_out_sel[, 1]^2, se_out_sel[, 2]^2, se_exp_sel^2)
+                                  se_out[, 1]^2, se_out[, 2]^2, se_exp^2)
       burnin <- floor(niter * burnin_prop)
       beta_est1 <- beta_est$beta_1[(burnin + 1):niter]
       beta_est2 <- beta_est$beta_2[(burnin + 1):niter]
