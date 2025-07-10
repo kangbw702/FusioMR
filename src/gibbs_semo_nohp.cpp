@@ -7,19 +7,15 @@ using namespace Rcpp;
 using namespace arma;
 
 // Implementation of my_rinvwishart
+// [[Rcpp::export]]
 arma::mat my_rinvwishart(double nu, arma::mat S) {
-  Function ff("rinvwishart");
-  SEXP result = ff(Named("nu") = nu, _["S"] = S);
-  arma::mat res = as<arma::mat>(result);
-  return res;
+  return arma::iwishrnd(S, nu);
 }
-
 
 // Helper function for multivariate normal sampling with robust Cholesky
 arma::mat mvrnormArma(int n, arma::vec mu, arma::mat sigma) {
   int ncols = sigma.n_cols;
   arma::mat Y = arma::randn(n, ncols);
-
   sigma = 0.5 * (sigma + sigma.t());
   arma::mat L;
   bool success = arma::chol(L, sigma, "lower");
@@ -35,12 +31,12 @@ arma::mat mvrnormArma(int n, arma::vec mu, arma::mat sigma) {
 
 // [[Rcpp::export]]
 List gibbs_semo_nohp(int niter,
-                         NumericVector Gamma_hat_1,
-                         NumericVector Gamma_hat_2,
-                         NumericVector gamma_hat,
-                         NumericVector s2_hat_Gamma_1,
-                         NumericVector s2_hat_Gamma_2,
-                         NumericVector s2_hat_gamma) {
+                     NumericVector Gamma_hat_1,
+                     NumericVector Gamma_hat_2,
+                     NumericVector gamma_hat,
+                     NumericVector s2_hat_Gamma_1,
+                     NumericVector s2_hat_Gamma_2,
+                     NumericVector s2_hat_gamma) {
 
   // prior setup
   int K = gamma_hat.size();
@@ -77,9 +73,11 @@ List gibbs_semo_nohp(int niter,
   // Initialize starting values
   arma::vec beta_cur = {0.0, 0.0};
   arma::vec gamma_cur = gamma_hat_vec;
-  arma::mat theta_cur(K, 2, arma::fill::zeros);  // theta corresponds to Gamma
+  arma::mat theta_cur(K, 2, arma::fill::zeros);
   arma::mat Sigma_theta_cur = arma::diagmat(sigma2_theta_prior_mean);
-  double sigma2_gamma_cur = var_gamma;
+  Sigma_theta_cur(0,0) = std::max(Sigma_theta_cur(0,0), 1e-6);
+  Sigma_theta_cur(1,1) = std::max(Sigma_theta_cur(1,1), 1e-6);
+  double sigma2_gamma_cur = std::max(var_gamma, 1e-6);
 
   // MCMC trace
   NumericVector beta_1_tk(niter);
@@ -124,20 +122,31 @@ List gibbs_semo_nohp(int niter,
     // update theta_k
     for (int k = 0; k < K; k++) {
       arma::mat S_hat_Gamma_k(2,2, arma::fill::zeros);
-      S_hat_Gamma_k(0,0) = s2_Gamma_1_vec[k];
-      S_hat_Gamma_k(1,1) = s2_Gamma_2_vec[k];
+      S_hat_Gamma_k(0,0) = std::max(s2_Gamma_1_vec[k], 1e-8);
+      S_hat_Gamma_k(1,1) = std::max(s2_Gamma_2_vec[k], 1e-8);
 
-      arma::mat precision_post_theta_mat = arma::inv(S_hat_Gamma_k) + arma::inv(Sigma_theta_cur);
+      arma::mat inv_Sigma_theta_cur;
+      bool success = arma::inv_sympd(inv_Sigma_theta_cur, Sigma_theta_cur);
+      if (!success) {
+        Sigma_theta_cur.diag() += 1e-8;
+        success = arma::inv_sympd(inv_Sigma_theta_cur, Sigma_theta_cur);
+        if (!success) Rcpp::stop("Sigma_theta_cur not invertible after jitter.");
+      }
+
+      arma::mat precision_post_theta_mat = arma::inv(S_hat_Gamma_k) + inv_Sigma_theta_cur;
       arma::vec temp = {Gamma_hat_1_vec[k] - beta_cur[0]*gamma_cur[k],
                         Gamma_hat_2_vec[k] - beta_cur[1]*gamma_cur[k]};
-      arma::vec mean_post_theta = arma::inv(precision_post_theta_mat) * arma::inv(S_hat_Gamma_k) * temp;
-      arma::mat theta_sample = mvrnormArma(1, mean_post_theta, arma::inv(precision_post_theta_mat));
+      arma::mat cov_post_theta = arma::inv(precision_post_theta_mat);
+      arma::vec mean_post_theta = cov_post_theta * arma::inv(S_hat_Gamma_k) * temp;
+      cov_post_theta = 0.5 * (cov_post_theta + cov_post_theta.t());
+      arma::mat theta_sample = mvrnormArma(1, mean_post_theta, cov_post_theta);
       theta_cur(k,0) = theta_sample(0,0);
       theta_cur(k,1) = theta_sample(0,1);
     }
 
     // update sigma2_gamma
-    sigma2_gamma_cur = my_rinvgamma(1, a_gamma_prior + K/2.0,
+    sigma2_gamma_cur = my_rinvgamma(1,
+                                    a_gamma_prior + K/2.0,
                                     b_gamma_prior + 0.5*arma::sum(arma::pow(gamma_cur,2)))[0];
     sigma2_gamma_cur = std::max(1e-4, std::min(sigma2_gamma_cur, 10.0));
     sigma2_gamma_tk[iter + 1] = sigma2_gamma_cur;
@@ -151,18 +160,21 @@ List gibbs_semo_nohp(int niter,
     S_theta = S_theta / K;
     double m_post_theta = m_Gamma + K;
     arma::mat V_post_theta = S_theta * K + V_Gamma;
+
+    V_post_theta = 0.5 * (V_post_theta + V_post_theta.t());
+    arma::vec eigval;
+    arma::mat eigvec;
+    arma::eig_sym(eigval, eigvec, V_post_theta);
+    eigval = arma::clamp(eigval, 1e-8, arma::datum::inf);
+    V_post_theta = eigvec * arma::diagmat(eigval) * eigvec.t();
     arma::mat Sigma_theta_sample = my_rinvwishart(m_post_theta, V_post_theta);
-
-    // add bounds
-    double rho_theta = Sigma_theta_sample(1,0)/sqrt(Sigma_theta_sample(0,0))/sqrt(Sigma_theta_sample(1,1));
-    Sigma_theta_sample(0,0) = std::max(1e-8, std::min(Sigma_theta_sample(0,0), 10.0));
-    Sigma_theta_sample(1,1) = std::max(1e-8, std::min(Sigma_theta_sample(1,1), 10.0));
-
+    double rho_theta = Sigma_theta_sample(1,0) / std::sqrt(Sigma_theta_sample(0,0) * Sigma_theta_sample(1,1));
+    Sigma_theta_sample(0,0) = std::clamp(Sigma_theta_sample(0,0), 1e-6, 10.0);
+    Sigma_theta_sample(1,1) = std::clamp(Sigma_theta_sample(1,1), 1e-6, 10.0);
+    rho_theta = std::clamp(rho_theta, -0.99, 0.99);
     Sigma_theta_cur(0,0) = Sigma_theta_sample(0,0);
     Sigma_theta_cur(1,1) = Sigma_theta_sample(1,1);
-    Sigma_theta_cur(0,1) = sqrt(Sigma_theta_sample(0,0) * Sigma_theta_sample(1,1)) * rho_theta;
-    Sigma_theta_cur(1,0) = Sigma_theta_cur(0,1);
-
+    Sigma_theta_cur(0,1) = Sigma_theta_cur(1,0) = rho_theta * std::sqrt(Sigma_theta_cur(0,0) * Sigma_theta_cur(1,1));
     sigma2_theta1_tk[iter+1] = Sigma_theta_cur(0,0);
     sigma2_theta2_tk[iter+1] = Sigma_theta_cur(1,1);
 
@@ -174,7 +186,6 @@ List gibbs_semo_nohp(int niter,
       Omega_hat_Gamma_2(ii, ii) = 1.0/s2_Gamma_2_vec[ii];
     }
     arma::vec U_beta_1(K), U_beta_2(K), W_beta_1(K), W_beta_2(K);
-
     for (int ii = 0; ii < K; ii++) {
       U_beta_1[ii] = Gamma_hat_1_vec[ii] - theta_cur(ii,0);
       U_beta_2[ii] = Gamma_hat_2_vec[ii] - theta_cur(ii,1);

@@ -18,7 +18,9 @@ Depends:
     R (>= 3.5.0)
 Imports:
     Rcpp (>= 1.0.0),
-    stats
+    stats,
+    RcppArmadillo,
+    MCMCpack
 LinkingTo: 
     Rcpp,
     RcppArmadillo

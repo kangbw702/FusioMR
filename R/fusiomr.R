@@ -52,7 +52,7 @@ fusiomr <- function(b_exp,
                     burnin_prop = 0.5) {
 
   # Input validation
-  cat("=== FusioMR: Mendelian Randomization Analysis ===\n")
+  cat("\n=== FusioMR: Mendelian Randomization Analysis ===\n")
   cat("Validating inputs...\n")
 
   # Check if inputs are numeric

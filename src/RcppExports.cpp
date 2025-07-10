@@ -23,6 +23,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// my_rinvwishart
+arma::mat my_rinvwishart(double nu, arma::mat S);
+RcppExport SEXP _FusioMR_my_rinvwishart(SEXP nuSEXP, SEXP SSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
+    rcpp_result_gen = Rcpp::wrap(my_rinvwishart(nu, S));
+    return rcpp_result_gen;
+END_RCPP
+}
 // gibbs_semo_nohp
 List gibbs_semo_nohp(int niter, NumericVector Gamma_hat_1, NumericVector Gamma_hat_2, NumericVector gamma_hat, NumericVector s2_hat_Gamma_1, NumericVector s2_hat_Gamma_2, NumericVector s2_hat_gamma);
 RcppExport SEXP _FusioMR_gibbs_semo_nohp(SEXP niterSEXP, SEXP Gamma_hat_1SEXP, SEXP Gamma_hat_2SEXP, SEXP gamma_hatSEXP, SEXP s2_hat_Gamma_1SEXP, SEXP s2_hat_Gamma_2SEXP, SEXP s2_hat_gammaSEXP) {
@@ -73,6 +85,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_FusioMR_fastSigLm", (DL_FUNC) &_FusioMR_fastSigLm, 2},
+    {"_FusioMR_my_rinvwishart", (DL_FUNC) &_FusioMR_my_rinvwishart, 2},
     {"_FusioMR_gibbs_semo_nohp", (DL_FUNC) &_FusioMR_gibbs_semo_nohp, 7},
     {"_FusioMR_gibbs_seso_nohp", (DL_FUNC) &_FusioMR_gibbs_seso_nohp, 5},
     {"_FusioMR_gibbs_seso_uhp_only", (DL_FUNC) &_FusioMR_gibbs_seso_uhp_only, 5},
