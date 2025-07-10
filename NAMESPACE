@@ -2,7 +2,6 @@
 
 export(dgm_individual)
 export(fusiomr)
-export(fusiomr_seso)
 export(get_empirical_ci)
 export(get_normal_ci)
 export(get_sel_idx)
