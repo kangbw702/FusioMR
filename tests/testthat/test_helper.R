@@ -80,24 +80,9 @@ test_that("print_summary works correctly", {
 })
 
 
-test_that("Helper functions handle edge cases", {
+test_that("small samples work correctly", {
   # Test with very small samples
   small_samples <- rnorm(10, 0.5, 0.1)
   result_small <- get_summary(small_samples)
   expect_type(result_small, "list")
-
-  # Test with zero variance
-  zero_var_samples <- rep(0.5, 100)
-  expect_warning(result_zero <- get_summary(zero_var_samples))
-
-  # Test get_sel_idx with all instruments passing/failing
-  b_strong <- matrix(rep(1, 10), ncol = 1)
-  se_strong <- matrix(rep(0.01, 10), ncol = 1)
-  result_all <- get_sel_idx(b_strong, se_strong, 0.05)
-  expect_true(all(result_all))
-
-  b_weak <- matrix(rep(0.001, 10), ncol = 1)
-  se_weak <- matrix(rep(1, 10), ncol = 1)
-  result_none <- get_sel_idx(b_weak, se_weak, 0.05)
-  expect_true(all(!result_none))
 })

@@ -180,7 +180,7 @@ fusiomr <- function(b_exp,
     }
   } else { # Multiple outcome models (n_outcomes == 2)
     if (!CHP) {
-      # Model 3: Single exposure, multiple outcomes without CHP
+      # Model 3: semo without CHP
       cat("\n--- Running Model: Single Exposure Multiple Outcomes (No Horizontal Pleiotropy) ---\n")
 
       # Gibbs
@@ -215,6 +215,6 @@ fusiomr <- function(b_exp,
     }
   }
 
-  cat("\n=== Analysis Complete ===\n \n")
+  cat("=== Analysis Complete ===\n \n")
   return(results)
 }
