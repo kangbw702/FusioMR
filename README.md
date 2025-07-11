@@ -148,6 +148,7 @@ result <- fusiomr(
   se_exp = se_exp,
   b_out = b_out, 
   se_out = se_out,
+  CHP = TRUE,              # Include correlated horizontal pleiotropy
   niter = 50000,           # More iterations
   burnin_prop = 0.3,       # Shorter burn-in
   p_value_threshold = 5e-8 # More stringent threshold
