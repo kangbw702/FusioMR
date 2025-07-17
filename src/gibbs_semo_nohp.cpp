@@ -152,7 +152,7 @@ List gibbs_semo_nohp(int niter,
     // update sigma2_gamma
     sigma2_gamma_cur = my_rinvgamma(1,
                                     a_gamma_prior + K/2.0,
-                                    b_gamma_prior + 0.5*arma::sum(arma::pow(gamma_cur,2)))[0];
+                                    arma::as_scalar(b_gamma_prior + 0.5*arma::sum(arma::pow(gamma_cur,2))))[0];
     sigma2_gamma_cur = std::max(1e-4, std::min(sigma2_gamma_cur, 10.0));
     sigma2_gamma_tk[iter + 1] = sigma2_gamma_cur;
 

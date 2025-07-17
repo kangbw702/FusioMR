@@ -71,13 +71,17 @@ fusiomr <- function(b_exp,
   }
 
   # Check that exposure data has only 1 column
-  if (ncol(b_exp) != 1 || ncol(se_exp) != 1) {
-    stop("Wrong input!! \n IV-Exposure summary statistics (b_exp, se_exp) must have exactly 1 column.")
+  if (ncol(b_exp) != ncol(se_exp)) {
+    stop("Wrong input!! \n IV-Exposure summary statistics (b_exp, se_exp) must have the same number of columns.")
   }
 
   # Check that outcome data has 1 or 2 columns
   if (ncol(b_out) != ncol(se_out)) {
     stop("Wrong input!! \n IV-Outcome summary statistics (b_out, se_out) must have the same number of columns.")
+  }
+
+  if (!(ncol(b_exp) %in% c(1, 2))) {
+    stop("Wrong input!! \n IV-Exposure summary statistics (b_out, se_out) must have 1 or 2 columns.")
   }
 
   if (!(ncol(b_out) %in% c(1, 2))) {
@@ -114,6 +118,7 @@ fusiomr <- function(b_exp,
   sel_ivs_idx <- get_sel_idx(b_exp, se_exp, p_value_threshold)
   n_sel <- sum(sel_ivs_idx)
   n_outcomes <- ncol(b_out)
+  n_exposure <- ncol(b_exp)
   n_ivs <- nrow(b_exp)
   cat(sprintf("Selected %d out of %d instruments (p < %g)\n", n_sel, n_ivs, p_value_threshold))
 
@@ -130,88 +135,117 @@ fusiomr <- function(b_exp,
 
   # Model Implementation
   results <- list()
-  if (n_outcomes == 1) { # Single outcome models
-    if (!CHP) {
-      # Model 1: seso without CHP
-      cat("\n--- Running Model: Single Exposure Single Outcome (No Horizontal Pleiotropy) ---\n")
+  if (n_exposure == 1) { # Single Exposure
+    if (n_outcomes == 1) { # Single outcome models
+      if (!CHP) {
+        # Model 1: seso without CHP
+        cat("\n--- Running Model: Single Exposure Single Outcome (No Horizontal Pleiotropy) ---\n")
 
-      # Gibbs
-      cat("Running Gibbs sampling...\n")
-      cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
-      beta_est <- gibbs_seso_nohp(niter, b_out_sel, b_exp_sel, se_out_sel^2, se_exp_sel^2)
-      burnin <- floor(niter * burnin_prop)
-      beta_est <- beta_est[(burnin + 1):niter]
+        # Gibbs
+        cat("Running Gibbs sampling...\n")
+        cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
+        beta_est <- gibbs_seso_nohp(niter, b_out_sel, b_exp_sel, se_out_sel^2, se_exp_sel^2)
+        burnin <- floor(niter * burnin_prop)
+        beta_est <- beta_est[(burnin + 1):niter]
 
-      # Get results statistics
-      res_summary <- get_summary(beta_est)
-      # Print results summary
-      cat("\n--- RESULTS---\n")
-      print_summary(res_summary)
+        # Get results statistics
+        res_summary <- get_summary(beta_est)
+        # Print results summary
+        cat("\n--- RESULTS---\n")
+        print_summary(res_summary)
 
-      # Return
-      results <- list(
-        est = res_summary$beta_est,
-        se = res_summary$beta_se,
-        pval = res_summary$beta_pval
-      )
-    } else {
-      # Model 2: seso with CHP
-      cat("\n--- Running Model: Single Exposure Single Outcome (With Horizontal Pleiotropy) ---\n")
+        # Return
+        results <- list(
+          est = res_summary$beta_est,
+          se = res_summary$beta_se,
+          pval = res_summary$beta_pval
+        )
+      } else {
+        # Model 2: seso with CHP
+        cat("\n--- Running Model: Single Exposure Single Outcome (With Horizontal Pleiotropy) ---\n")
 
-      # Gibbs
-      cat("Running Gibbs sampling...\n")
-      cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
-      beta_est <- gibbs_seso_uhp_only(niter, b_out_sel, b_exp_sel, se_out_sel^2, se_exp_sel^2)
-      burnin <- floor(niter * burnin_prop)
-      beta_est <- beta_est[(burnin + 1):niter]
+        # Gibbs
+        cat("Running Gibbs sampling...\n")
+        cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
+        beta_est <- gibbs_seso_uhp_only(niter, b_out_sel, b_exp_sel, se_out_sel^2, se_exp_sel^2)
+        burnin <- floor(niter * burnin_prop)
+        beta_est <- beta_est[(burnin + 1):niter]
 
-      # Get results statistics
-      res_summary <- get_summary(beta_est)
-      # Print results summary
-      cat("\n--- RESULTS---\n")
-      print_summary(res_summary)
+        # Get results statistics
+        res_summary <- get_summary(beta_est)
+        # Print results summary
+        cat("\n--- RESULTS---\n")
+        print_summary(res_summary)
 
-      # Return
-      results <- list(
-        est = res_summary$beta_est,
-        se = res_summary$beta_se,
-        pval = res_summary$beta_pval
-      )
+        # Return
+        results <- list(
+          est = res_summary$beta_est,
+          se = res_summary$beta_se,
+          pval = res_summary$beta_pval
+        )
+      }
+    } else { # Multiple outcome models (n_outcomes == 2)
+      if (!CHP) {
+        # Model 3: semo without CHP
+        cat("\n--- Running Model: Single Exposure Multiple Outcomes (No Horizontal Pleiotropy) ---\n")
+
+        # Gibbs
+        cat("Running Gibbs sampling...\n")
+        cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
+
+        beta_est <- gibbs_semo_nohp(niter, b_out[, 1], b_out[, 2], b_exp,
+                                    se_out[, 1]^2, se_out[, 2]^2, se_exp^2)
+        burnin <- floor(niter * burnin_prop)
+        beta_est1 <- beta_est$beta_1[(burnin + 1):niter]
+        beta_est2 <- beta_est$beta_2[(burnin + 1):niter]
+
+        # Get results statistics
+        res_summary1 <- get_summary(beta_est1)
+        res_summary2 <- get_summary(beta_est2)
+        # Print results summary
+        cat("\n--- RESULTS for Outcome1---\n")
+        print_summary(res_summary1)
+        cat("\n--- RESULTS for Outcome2---\n")
+        print_summary(res_summary2)
+
+        # Return
+        results <- list(
+          est = c(res_summary1$beta_est, res_summary2$beta_est),
+          se = c(res_summary1$beta_se, res_summary2$beta_se),
+          pval = c(res_summary1$beta_pval, res_summary2$beta_pval)
+        )
+      } else {
+        # Model 4: semo with uhp
+        cat("\n--- Running Model: Single Exposure Multiple Outcomes (With Horizontal Pleiotropy)---\n")
+        cat("has not implemented yet")
+      }
     }
-  } else { # Multiple outcome models (n_outcomes == 2)
-    if (!CHP) {
-      # Model 3: semo without CHP
-      cat("\n--- Running Model: Single Exposure Multiple Outcomes (No Horizontal Pleiotropy) ---\n")
+  } else { # Multiple Exposure
+    if (n_outcomes == 2) { # Multiple Outcomes
+      # Model 5: memo uhp+chp
+      cat("\n--- Running Model: Multiple Exposure Multiple Outcomes---\n")
+
 
       # Gibbs
       cat("Running Gibbs sampling...\n")
       cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
-
-      beta_est <- gibbs_semo_nohp(niter, b_out[, 1], b_out[, 2], b_exp,
-                                  se_out[, 1]^2, se_out[, 2]^2, se_exp^2)
       burnin <- floor(niter * burnin_prop)
-      beta_est1 <- beta_est$beta_1[(burnin + 1):niter]
-      beta_est2 <- beta_est$beta_2[(burnin + 1):niter]
 
-      # Get results statistics
-      res_summary1 <- get_summary(beta_est1)
-      res_summary2 <- get_summary(beta_est2)
-      # Print results summary
-      cat("\n--- RESULTS for Outcome1---\n")
-      print_summary(res_summary1)
-      cat("\n--- RESULTS for Outcome2---\n")
-      print_summary(res_summary2)
+      res <- gibbs_memo_joint(niter, b_out[, 1], b_out[, 2], b_exp[, 1], b_exp[, 2],
+                              se_out[, 1]^2, se_out[, 2]^2, se_exp[, 1]^2, se_exp[, 2]^2,
+                              rho_eta=0.5, q_chp1=0.5, q_chp2=0.5)
+      eta_true_1 <- rep(0, n_ivs)
+      eta_true_2 <- rep(0, n_ivs)
+      post_res <- label_flip_joint(res, eta_true_1, eta_true_2)
+      # Print result summmary
+      print_summary_memo(post_res)
 
-      # Return
+      # Returns
       results <- list(
-        est = c(res_summary1$beta_est, res_summary2$beta_est),
-        se = c(res_summary1$beta_se, res_summary2$beta_se),
-        pval = c(res_summary1$beta_pval, res_summary2$beta_pval)
+        est = c(post_res$beta_est1, post_res$beta_est2),
+        se = c(post_res$beta_se1, post_res$beta_se2),
+        pval = c(post_res$beta_pval1, post_res$beta_pval2)
       )
-    } else {
-      # Model 4: Single exposure, multiple outcomes with CHP
-      cat("\n--- Running Model: Single Exposure Multiple Outcomes (With Horizontal Pleiotropy) ---\n")
-      cat("has not implemented yet")
     }
   }
 
