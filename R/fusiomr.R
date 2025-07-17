@@ -126,17 +126,15 @@ fusiomr <- function(b_exp,
     warning("Less than 3 instruments selected. Results may be unreliable.")
   }
 
-  # Select summary statistics
-  b_exp_sel <- b_exp[sel_ivs_idx, , drop = FALSE]
-  se_exp_sel <- se_exp[sel_ivs_idx, , drop = FALSE]
-  b_out_sel <- b_out[sel_ivs_idx, , drop = FALSE]
-  se_out_sel <- se_out[sel_ivs_idx, , drop = FALSE]
-
-
   # Model Implementation
   results <- list()
   if (n_exposure == 1) { # Single Exposure
     if (n_outcomes == 1) { # Single outcome models
+      # Select summary statistics
+      b_exp_sel <- b_exp[sel_ivs_idx, , drop = FALSE]
+      se_exp_sel <- se_exp[sel_ivs_idx, , drop = FALSE]
+      b_out_sel <- b_out[sel_ivs_idx, , drop = FALSE]
+      se_out_sel <- se_out[sel_ivs_idx, , drop = FALSE]
       if (!CHP) {
         # Model 1: seso without CHP
         cat("\n--- Running Model: Single Exposure Single Outcome (No Horizontal Pleiotropy) ---\n")
@@ -233,11 +231,11 @@ fusiomr <- function(b_exp,
 
       res <- gibbs_memo_joint(niter, b_out[, 1], b_out[, 2], b_exp[, 1], b_exp[, 2],
                               se_out[, 1]^2, se_out[, 2]^2, se_exp[, 1]^2, se_exp[, 2]^2,
-                              rho_eta=0.5, q_chp1=0.5, q_chp2=0.5)
+                              rho_eta=0.9, q_chp1=0.1, q_chp2=0.1)
       eta_true_1 <- rep(0, n_ivs)
       eta_true_2 <- rep(0, n_ivs)
       post_res <- label_flip_joint(res, eta_true_1, eta_true_2)
-      # Print result summmary
+      # Print result summary
       print_summary_memo(post_res)
 
       # Returns
@@ -248,7 +246,6 @@ fusiomr <- function(b_exp,
       )
     }
   }
-
   cat("=== Analysis Complete ===\n \n")
   return(results)
 }
