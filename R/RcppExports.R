@@ -5,8 +5,8 @@ fastSigLm <- function(y, X) {
     .Call(`_FusioMR_fastSigLm`, y, X)
 }
 
-my_rinvwishart <- function(nu, S) {
-    .Call(`_FusioMR_my_rinvwishart`, nu, S)
+gibbs_memo_joint <- function(niter, Gamma_hat_1, Gamma_hat_2, gamma_hat_1, gamma_hat_2, s_hat_Gamma_1, s_hat_Gamma_2, s_hat_gamma_1, s_hat_gamma_2) {
+    .Call(`_FusioMR_gibbs_memo_joint`, niter, Gamma_hat_1, Gamma_hat_2, gamma_hat_1, gamma_hat_2, s_hat_Gamma_1, s_hat_Gamma_2, s_hat_gamma_1, s_hat_gamma_2)
 }
 
 gibbs_semo_nohp <- function(niter, Gamma_hat_1, Gamma_hat_2, gamma_hat, s2_hat_Gamma_1, s2_hat_Gamma_2, s2_hat_gamma) {
@@ -19,5 +19,13 @@ gibbs_seso_nohp <- function(niter, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_ga
 
 gibbs_seso_uhp_only <- function(niter, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_gamma) {
     .Call(`_FusioMR_gibbs_seso_uhp_only`, niter, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_gamma)
+}
+
+my_rinvwishart <- function(nu, S) {
+    .Call(`_FusioMR_my_rinvwishart`, nu, S)
+}
+
+my_rdirichlet <- function(n, alpha) {
+    .Call(`_FusioMR_my_rdirichlet`, n, alpha)
 }
 
