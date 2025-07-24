@@ -1,7 +1,7 @@
 Package: FusioMR
 Type: Package
 Title: Fusion Mendelian Randomization Framework
-Version: 0.1.0
+Version: 1.1.1
 Authors@R:
     person(given  = "Sihao",
            family = "Feng",
@@ -14,11 +14,13 @@ Description: Implements a flexible, unified, and versatile framework for
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
+SystemRequirements: C++17
 Depends: 
-    R (>= 3.5.0)
+    R (>= 4.3.0)
 Imports:
-    Rcpp (>= 1.0.0),
-    stats
+    Rcpp (>= 1.1.0),
+    stats (>= 4.4.3),
+    RcppArmadillo (>= 14.6.0.1)
 LinkingTo: 
     Rcpp,
     RcppArmadillo
