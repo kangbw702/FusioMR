@@ -14,9 +14,13 @@ List gibbs_semo_nohp(int niter,
                      NumericVector Gamma_hat_1,
                      NumericVector Gamma_hat_2,
                      NumericVector gamma_hat,
-                     NumericVector s2_hat_Gamma_1,
-                     NumericVector s2_hat_Gamma_2,
-                     NumericVector s2_hat_gamma) {
+                     NumericVector s_hat_Gamma_1,
+                     NumericVector s_hat_Gamma_2,
+                     NumericVector s_hat_gamma) {
+
+  NumericVector s2_hat_Gamma_1 = pow(s_hat_Gamma_1,2);
+  NumericVector s2_hat_Gamma_2 = pow(s_hat_Gamma_2,2);
+  NumericVector s2_hat_gamma = pow(s_hat_gamma,2);
 
   // prior setup
   int K = gamma_hat.size();
@@ -28,6 +32,9 @@ List gibbs_semo_nohp(int niter,
   arma::vec gamma_hat_vec = as<arma::vec>(gamma_hat);
   arma::vec Gamma_hat_1_vec = as<arma::vec>(Gamma_hat_1);
   arma::vec Gamma_hat_2_vec = as<arma::vec>(Gamma_hat_2);
+  arma::vec s_gamma_vec = as<arma::vec>(s_hat_gamma);
+  arma::vec s_Gamma_1_vec = as<arma::vec>(s_hat_Gamma_1);
+  arma::vec s_Gamma_2_vec = as<arma::vec>(s_hat_Gamma_2);
   arma::vec s2_gamma_vec = as<arma::vec>(s2_hat_gamma);
   arma::vec s2_Gamma_1_vec = as<arma::vec>(s2_hat_Gamma_1);
   arma::vec s2_Gamma_2_vec = as<arma::vec>(s2_hat_Gamma_2);
@@ -38,17 +45,17 @@ List gibbs_semo_nohp(int niter,
 
   // Gamma prior setup
   double var_gamma = arma::var(gamma_hat_vec);
-  double mean_se_gamma = arma::mean(s2_gamma_vec);
-  double b_gamma_prior = std::max(1e-3, var_gamma - mean_se_gamma * mean_se_gamma) * (a_gamma_prior - 1.0);
+  double mean_se_gamma = arma::mean(s_gamma_vec);
+  double b_gamma_prior = std::max(1e-3, var_gamma - pow(mean_se_gamma,2)) * (a_gamma_prior - 1.0);
 
   // Gamma matrix prior setup
   arma::vec var_Gamma = {arma::var(Gamma_hat_1_vec), arma::var(Gamma_hat_2_vec)};
-  arma::vec mean_se_Gamma = {arma::mean(s2_Gamma_1_vec), arma::mean(s2_Gamma_2_vec)};
+  arma::vec mean_se_Gamma = {arma::mean(s_Gamma_1_vec), arma::mean(s_Gamma_2_vec)};
   arma::vec sigma2_theta_prior_mean(2);
   arma::vec b_theta_prior(2);
 
   for (int i = 0; i < 2; i++) {
-    sigma2_theta_prior_mean[i] = std::max(1e-6, var_Gamma[i] - mean_se_Gamma[i] * mean_se_Gamma[i]);
+    sigma2_theta_prior_mean[i] = std::max(1e-6, (var_Gamma[i] - pow(mean_se_Gamma[i],2)));
     b_theta_prior[i] = sigma2_theta_prior_mean[i] * (a_Gamma_prior - 1.0);
   }
 
@@ -154,9 +161,9 @@ List gibbs_semo_nohp(int niter,
     V_post_theta = eigvec * arma::diagmat(eigval) * eigvec.t();
     arma::mat Sigma_theta_sample = my_rinvwishart(m_post_theta, V_post_theta);
     double rho_theta = Sigma_theta_sample(1,0) / std::sqrt(Sigma_theta_sample(0,0) * Sigma_theta_sample(1,1));
-    Sigma_theta_sample(0,0) = std::clamp(Sigma_theta_sample(0,0), 1e-6, 10.0);
-    Sigma_theta_sample(1,1) = std::clamp(Sigma_theta_sample(1,1), 1e-6, 10.0);
-    rho_theta = std::clamp(rho_theta, -0.99, 0.99);
+    Sigma_theta_sample(0,0) = std::max(1e-6, std::min(Sigma_theta_sample(0,0), 10.0));
+    Sigma_theta_sample(1,1) = std::max(1e-6, std::min(Sigma_theta_sample(1,1), 10.0));
+    rho_theta = std::max(-0.99, std::min(rho_theta, 0.99));
     Sigma_theta_cur(0,0) = Sigma_theta_sample(0,0);
     Sigma_theta_cur(1,1) = Sigma_theta_sample(1,1);
     Sigma_theta_cur(0,1) = Sigma_theta_cur(1,0) = rho_theta * std::sqrt(Sigma_theta_cur(0,0) * Sigma_theta_cur(1,1));

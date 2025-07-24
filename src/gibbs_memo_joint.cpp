@@ -67,7 +67,7 @@ List gibbs_memo_joint(int niter,
   double p01 = std::max(0.0, 1 - q_chp1 - p00);
   double p11 = std::max(0.0, q_chp1 + q_chp2 + p00 - 1);
 
-  // MCMC trace matrices
+  // MCMC trace
   NumericMatrix theta_1_tk(niter, K);
   NumericMatrix theta_2_tk(niter, K);
   NumericMatrix gamma_1_tk(niter, K);
@@ -81,11 +81,10 @@ List gibbs_memo_joint(int niter,
   NumericVector beta_2_tk(niter);
   NumericMatrix q_post_1_tk(niter, K);
   NumericMatrix q_post_2_tk(niter, K);
-
   NumericVector cc = NumericVector::create(1.0, 1.0, 1.0, 1.0);
   NumericVector pst_init = NumericVector::create(p00, p01, p10, p11);
 
-  // Initialize traces
+  // Initialize the starting values
   for (int j = 0; j < K; ++j) {
     theta_1_tk(0, j) = 0.0;
     theta_2_tk(0, j) = 0.0;
@@ -109,7 +108,6 @@ List gibbs_memo_joint(int niter,
   sigma2_theta1_tk[0] = Sigma_theta_init(0,0);
   sigma2_theta2_tk[0] = Sigma_theta_init(1,1);
 
-  // Set current values as initial values
   arma::mat theta_cur(K, 2, fill::zeros);
   arma::mat gamma_cur(K, 2, fill::zeros);
   arma::mat eta_cur(K, 2, fill::zeros);
@@ -127,31 +125,24 @@ List gibbs_memo_joint(int niter,
 
   // Gibbs
   for (int iter = 0; iter < (niter-1); iter++) {
-    // Update gamma_k and theta_k
     for (int k = 0; k < K; k++) {
+      // Update gamma_k
       arma::mat A_k(2, 2, fill::zeros);
       A_k(0,0) = beta_cur[0] + alpha_cur[0] * eta_cur(k,0);
       A_k(1,1) = beta_cur[1] + alpha_cur[1] * eta_cur(k,1);
-
       arma::mat S_hat_Gamma_k_inv(2, 2, fill::zeros);
       S_hat_Gamma_k_inv(0,0) = 1.0 / s2_hat_Gamma_1[k];
       S_hat_Gamma_k_inv(1,1) = 1.0 / s2_hat_Gamma_2[k];
-
       arma::mat S_hat_gamma_k_inv(2, 2, fill::zeros);
       S_hat_gamma_k_inv(0,0) = 1.0 / s2_hat_gamma_1[k];
       S_hat_gamma_k_inv(1,1) = 1.0 / s2_hat_gamma_2[k];
-
-      // Update gamma_k
       arma::mat Sigma_gamma_cur_inv = inv_sympd(Sigma_gamma_cur);
       arma::mat precision_mat_post_gamma = A_k.t() * S_hat_Gamma_k_inv * A_k + S_hat_gamma_k_inv + Sigma_gamma_cur_inv;
-
       arma::vec temp1 = {Gamma_hat_1[k] - theta_cur(k,0), Gamma_hat_2[k] - theta_cur(k,1)};
       arma::vec temp2 = {gamma_hat_1[k], gamma_hat_2[k]};
       arma::vec mu_post_nom_gamma = A_k.t() * S_hat_Gamma_k_inv * temp1 + S_hat_gamma_k_inv * temp2;
-
       arma::mat cov_post_gamma = inv_sympd(precision_mat_post_gamma);
       arma::vec mu_post_gamma = cov_post_gamma * mu_post_nom_gamma;
-
       arma::mat gamma_sample = mvrnormArma(1, mu_post_gamma, cov_post_gamma);
       gamma_cur(k,0) = gamma_sample(0,0);
       gamma_cur(k,1) = gamma_sample(0,1);
@@ -159,14 +150,11 @@ List gibbs_memo_joint(int niter,
       // Update theta_k
       arma::mat Sigma_theta_cur_inv = inv_sympd(Sigma_theta_cur);
       arma::mat precision_mat_post_theta = S_hat_Gamma_k_inv + Sigma_theta_cur_inv;
-
       arma::vec temp3 = {Gamma_hat_1[k] - beta_cur[0]*gamma_cur(k,0) - alpha_cur[0]*gamma_cur(k,0)*eta_cur(k,0),
                          Gamma_hat_2[k] - beta_cur[1]*gamma_cur(k,1) - alpha_cur[1]*gamma_cur(k,1)*eta_cur(k,1)};
       arma::vec mu_post_nom_theta = S_hat_Gamma_k_inv * temp3;
-
       arma::mat cov_post_theta = inv_sympd(precision_mat_post_theta);
       arma::vec mu_post_theta = cov_post_theta * mu_post_nom_theta;
-
       arma::mat theta_sample = mvrnormArma(1, mu_post_theta, cov_post_theta);
       theta_cur(k,0) = theta_sample(0,0);
       theta_cur(k,1) = theta_sample(0,1);
@@ -357,8 +345,8 @@ List gibbs_memo_joint(int niter,
   }
 
   List res = List::create(
-    Named("beta_1") = beta_1_tk,
-    Named("beta_2") = beta_2_tk,
+    Named("beta_1_tk") = beta_1_tk,
+    Named("beta_2_tk") = beta_2_tk,
     Named("alpha_1_tk") = alpha_1_tk,
     Named("alpha_2_tk") = alpha_2_tk,
     Named("eta_1_tk") = eta_1_tk,

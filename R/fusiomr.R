@@ -113,23 +113,25 @@ fusiomr <- function(b_exp,
 
   cat("Input validation completed.\n")
 
-  # IV selection
-  cat("Performing instrumental variable selection...\n")
-  sel_ivs_idx <- get_sel_idx(b_exp, se_exp, p_value_threshold)
-  n_sel <- sum(sel_ivs_idx)
+
   n_outcomes <- ncol(b_out)
   n_exposure <- ncol(b_exp)
   n_ivs <- nrow(b_exp)
-  cat(sprintf("Selected %d out of %d instruments (p < %g)\n", n_sel, n_ivs, p_value_threshold))
-
-  if (n_sel < 3) {
-    warning("Less than 3 instruments selected. Results may be unreliable.")
-  }
 
   # Model Implementation
   results <- list()
   if (n_exposure == 1) { # Single Exposure
     if (n_outcomes == 1) { # Single outcome models
+      # IV selection
+      cat("Performing instrumental variable selection...\n")
+      sel_ivs_idx <- get_sel_idx(b_exp, se_exp, p_value_threshold)
+      n_sel <- sum(sel_ivs_idx)
+      cat(sprintf("Selected %d out of %d instruments (p < %g)\n", n_sel, n_ivs, p_value_threshold))
+
+      if (n_sel < 3) {
+        warning("Less than 3 instruments selected. Results may be unreliable.")
+      }
+
       # Select summary statistics
       b_exp_sel <- b_exp[sel_ivs_idx, , drop = FALSE]
       se_exp_sel <- se_exp[sel_ivs_idx, , drop = FALSE]
@@ -192,7 +194,7 @@ fusiomr <- function(b_exp,
         cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
 
         beta_est <- gibbs_semo_nohp(niter, b_out[, 1], b_out[, 2], b_exp,
-                                    se_out[, 1]^2, se_out[, 2]^2, se_exp^2)
+                                    se_out[, 1], se_out[, 2], se_exp)
         burnin <- floor(niter * burnin_prop)
         beta_est1 <- beta_est$beta_1[(burnin + 1):niter]
         beta_est2 <- beta_est$beta_2[(burnin + 1):niter]
@@ -222,23 +224,22 @@ fusiomr <- function(b_exp,
     if (n_outcomes == 2) { # Multiple Outcomes
       # Model 5: memo uhp+chp
       cat("\n--- Running Model: Multiple Exposure Multiple Outcomes---\n")
-
-
       # Gibbs
       cat("Running Gibbs sampling...\n")
       cat(sprintf("Iterations: %d, Burn-in: %d\n", niter, floor(niter * burnin_prop)))
       burnin <- floor(niter * burnin_prop)
-
       res <- gibbs_memo_joint(niter, b_out[, 1], b_out[, 2], b_exp[, 1], b_exp[, 2],
-                              se_out[, 1]^2, se_out[, 2]^2, se_exp[, 1]^2, se_exp[, 2]^2,
-                              rho_eta=0.9, q_chp1=0.1, q_chp2=0.1)
+                              se_out[, 1], se_out[, 2], se_exp[, 1], se_exp[, 2])
+
+      # Debug the results
+      # debug_gibbs_results(res, niter, burnin_prop)
+
       eta_true_1 <- rep(0, n_ivs)
       eta_true_2 <- rep(0, n_ivs)
-      post_res <- label_flip_joint(res, eta_true_1, eta_true_2)
-      # Print result summary
-      print_summary_memo(post_res)
 
-      # Returns
+      # Use debug version of label_flip_joint
+      post_res <- label_flip_joint(res, eta_true_1, eta_true_2, niter, burnin_prop)
+      print_summary_memo(post_res)
       results <- list(
         est = c(post_res$beta_est1, post_res$beta_est2),
         se = c(post_res$beta_se1, post_res$beta_se2),
