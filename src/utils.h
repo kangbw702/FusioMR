@@ -3,7 +3,7 @@
 
 #include <RcppArmadillo.h>
 
-// Function declaration
+// Function declarations
 Rcpp::NumericVector my_rinvgamma(int n, double shape, double rate);
 
 #endif
