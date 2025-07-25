@@ -1,4 +1,4 @@
-#' Drop burnin proportion
+#' A helper function to drop burnin proportion
 #'
 #' Removes burn-in samples from MCMC results to obtain post-burnin posterior samples
 #' for subsequent analysis.
@@ -30,6 +30,49 @@ get_post_burnin_res <- function(res, niter, burnin_prop) {
   return(post_res)
 }
 
+#' A helper function to post-processing for multiple exposure, multiple outcome joint model.
+#'
+#' This function performs label-switching correction for memo model by
+#' adjusting parameter estimates based on posterior probabilities.
+#'
+#' @param res Object containing posterior samples from MCMC estimation. Must include
+#'   fields: \code{pst_tk}, \code{beta_1_tk}, \code{alpha_1_tk}, \code{beta_2_tk},
+#'   and \code{alpha_2_tk}.
+#' @param eta_true_1 Numeric. True value of first eta parameter indicating if IVs are valid
+#' @param eta_true_2 Numeric. True value of second eta parameter indicating if IVs are valid
+#' @param niter Integer. Total number of MCMC iterations.
+#' @param burnin_prop Numeric. Proportion of iterations to discard as burn-in
+#'   (between 0 and 1).
+#'
+#' @return A list containing statistical summaries for both corrected parameters:
+#' \describe{
+#'   \item{beta_est1}{Posterior mean for causal effect of outcome1}
+#'   \item{beta_se1}{Posterior standard deviation for outcome1}
+#'   \item{beta_est2}{Posterior mean for causal effect of outcome2}
+#'   \item{beta_se2}{Posterior standard deviation for outcome2}
+#'   \item{beta_pval1}{Two-sided p-value for beta1 using normal approximation}
+#'   \item{beta_pval2}{Two-sided p-value for beta2 using normal approximation}
+#'   \item{ci_emp1}{95\% empirical credible interval for beta1}
+#'   \item{ci_emp2}{95\% empirical credible interval for beta2}
+#' }
+#'
+#' @details
+#' The function performs label-switching correction using the following algorithm:
+#'
+#' 1. Extracts post-burn-in posterior samples using \code{get_post_burnin_res()}
+#' 2. Calculates marginal probabilities:
+#'    - qq1 = mean(p10_post + p11_post) for first dimension
+#'    - qq2 = mean(p01_post + p11_post) for second dimension
+#' 3. Applies correction based on 0.5 threshold:
+#'    - If qq1 > 0.5: Uses beta_1_tk + alpha_1_tk (label-switched)
+#'    - If qq1 ≤ 0.5: Uses beta_1_tk (original labels)
+#'    - Same logic applies for second dimension
+#' 4. Computes posterior statistics and p-values using normal approximation
+#'
+#' The label-switching occurs when the marginal probability exceeds 0.5, indicating
+#' that the labels may have been flipped during MCMC sampling.
+#'
+#' @export
 label_flip_joint <- function(res, eta_true_1, eta_true_2, niter, burnin_prop) {
   post_res = get_post_burnin_res(res, niter, burnin_prop)
   p00_post = post_res$pst_tk[, 1]

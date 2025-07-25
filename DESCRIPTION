@@ -1,7 +1,7 @@
 Package: FusioMR
 Type: Package
 Title: Fusion Mendelian Randomization Framework
-Version: 0.1.1
+Version: 1.1.1
 Authors@R:
     person(given  = "Sihao",
            family = "Feng",
@@ -18,9 +18,8 @@ SystemRequirements: C++17
 Depends: 
     R (>= 4.0.0)
 Imports:
-    Rcpp (>= 1.0.0),
-    stats,
-    RcppArmadillo
+    Rcpp,
+    stats
 LinkingTo: 
     Rcpp,
     RcppArmadillo

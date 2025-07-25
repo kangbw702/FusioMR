@@ -41,7 +41,6 @@
 #'
 #' @export
 #'
-
 fusiomr <- function(b_exp,
                     se_exp,
                     b_out,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions_memo.R
 \name{get_post_burnin_res}
 \alias{get_post_burnin_res}
-\title{Drop burnin proportion}
+\title{A helper function to drop burnin proportion}
 \usage{
 get_post_burnin_res(res, niter, burnin_prop)
 }
