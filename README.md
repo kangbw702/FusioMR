@@ -21,6 +21,9 @@ install.packages("devtools")
 
 # Install FusioMR from your GitHub repository
 devtools::install_github("kangbw702/FusioMR")
+
+# Load the FusioMR package
+library("FusioMR")
 ```
 
 ## Documentation
