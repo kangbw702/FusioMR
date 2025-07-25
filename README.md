@@ -12,7 +12,10 @@ R.version.string
 ```
 FusioMR requires **R version 4.3.0 or higher**. 
 
-
+Please ensure you have proper C++ compiler installed:  
+- Windows: Install Rtools
+- macOS: Install Xcode command line tools
+ 
 With latest version of R, you can install the development version of FusioMR from GitHub with:
 
 ```r

@@ -17,6 +17,6 @@
 #' @name FusioMR-package
 #' @aliases FusioMR
 #' @useDynLib FusioMR, .registration=TRUE
-#' @importFrom Rcpp evalCpp
+#' @importFrom Rcpp sourceCpp
 #' @importFrom stats rnorm pnorm quantile sd
 NULL
