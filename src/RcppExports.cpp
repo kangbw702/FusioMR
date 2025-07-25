@@ -102,13 +102,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // my_rdirichlet
-NumericVector my_rdirichlet(int n, NumericVector alpha);
+Rcpp::NumericVector my_rdirichlet(int n, Rcpp::NumericVector alpha);
 RcppExport SEXP _FusioMR_my_rdirichlet(SEXP nSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(my_rdirichlet(n, alpha));
     return rcpp_result_gen;
 END_RCPP

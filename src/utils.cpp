@@ -35,8 +35,17 @@ arma::mat mvrnormArma(int n, arma::vec mu, arma::mat sigma) {
 }
 
 // [[Rcpp::export]]
-NumericVector my_rdirichlet(int n, NumericVector alpha) {
-  Function ff("rdirichlet");
-  NumericVector res = ff(Named("n") = n, _["alpha"] = alpha);
-  return res;
+Rcpp::NumericVector my_rdirichlet(int n, Rcpp::NumericVector alpha) {
+  if (n != 1) Rcpp::stop("my_rdirichlet currently supports n = 1 only.");
+  int K = alpha.size();
+  Rcpp::NumericVector draws(K);
+  double sum = 0.0;
+  for (int k = 0; k < K; ++k) {
+    draws[k] = R::rgamma(alpha[k], 1.0);
+    sum += draws[k];
+  }
+  // Normalize
+  for (int k = 0; k < K; ++k) draws[k] /= sum;
+  return draws;
 }
+
