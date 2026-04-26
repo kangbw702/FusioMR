@@ -13,7 +13,7 @@ Description: Implements a flexible, unified, and versatile framework for
     and causal effect estimation from GWAS summary statistics.
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 SystemRequirements: C++17
 Depends: 
     R (>= 4.0.0)
