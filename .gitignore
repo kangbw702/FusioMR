@@ -1,6 +1,23 @@
 .Rproj.user
 .Rhistory
-.Rdata
+.RData
 .httr-oauth
 .DS_Store
 .quarto
+.positai
+.Ruserdata
+*.Rcheck/
+*.tar.gz
+
+# C/C++ build artifacts
+*.o
+*.so
+*.dll
+*.dylib
+*.tmp
+
+# Generated files
+src/*.o
+src/*.so
+src/*.dll
+src/symbols.rds
