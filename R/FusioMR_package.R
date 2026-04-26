@@ -19,4 +19,5 @@
 #' @useDynLib FusioMR, .registration=TRUE
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats rnorm pnorm quantile sd
+#' @importFrom invgamma rinvgamma
 NULL
