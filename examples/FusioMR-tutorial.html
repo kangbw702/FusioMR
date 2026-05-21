@@ -374,8 +374,8 @@ priors</a></li>
 <p>This vignette demonstrates how to use <code>FusioMRdev</code> for
 single- and multi-outcome Mendelian randomization with GWAS summary
 statistics. For installation instructions, package overview, and a
-description of input / output formats, see the <a href="https://github.com/fsh56/FusioMR-software">README</a>.</p>
-<p>The example datasets used below are available in the <a href="https://github.com/fsh56/FusioMR-software/tree/main/examples/data">examples/data/</a>
+description of input / output formats, see the <a href="https://github.com/kangbw702/FusioMR">README</a>.</p>
+<p>The example datasets used below are available in the <a href="https://github.com/kangbw702/FusioMR/tree/main/examples/data">examples/data/</a>
 folder of the GitHub repository.</p>
 <div id="fusiomr_s-single-outcome-mr-model-allowing-pleiotropy" class="section level1">
 <h1>FusioMR_s: Single-outcome MR model allowing pleiotropy</h1>
@@ -396,13 +396,13 @@ true causal effect <span class="math inline">\(\beta = 0\)</span>).</p>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="do">## Running model: seso_uhp_only</span></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The causal effect estimate is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit1<span class="sc">$</span>est))</span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="do">## The causal effect estimate is -0.0435</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="do">## The causal effect estimate is -0.0413</span></span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The standard error is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit1<span class="sc">$</span>se))</span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="do">## The standard error is 0.0287</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="do">## The standard error is 0.0288</span></span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The two-sided p-value is %.4g</span><span class="sc">\n</span><span class="st">&quot;</span>, fit1<span class="sc">$</span>pval))</span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="do">## The two-sided p-value is 0.1296</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="do">## The two-sided p-value is 0.1518</span></span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The 95%% CI is [%.4f, %.4f]</span><span class="sc">\n</span><span class="st">&quot;</span>, fit1<span class="sc">$</span>ci[<span class="dv">1</span>], fit1<span class="sc">$</span>ci[<span class="dv">2</span>]))</span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="do">## The 95% CI is [-0.1036, 0.0120]</span></span></code></pre></div>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="do">## The 95% CI is [-0.1016, 0.0144]</span></span></code></pre></div>
 </div>
 <div id="single-exposure-single-outcome-with-chp-seso_with_chp" class="section level2">
 <h2>Single exposure, Single outcome with CHP:
@@ -421,13 +421,13 @@ both 20,000, true causal effect <span class="math inline">\(\beta =
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## Running model: seso_with_chp</span></span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The causal effect estimate is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit2<span class="sc">$</span>est))</span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.0147</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.0158</span></span>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The standard error is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit2<span class="sc">$</span>se))</span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="do">## The standard error is 0.0127</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="do">## The standard error is 0.0128</span></span>
 <span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The two-sided p-value is %.4g</span><span class="sc">\n</span><span class="st">&quot;</span>, fit2<span class="sc">$</span>pval))</span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="do">## The two-sided p-value is 0.2472</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="do">## The two-sided p-value is 0.2147</span></span>
 <span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The 95%% CI is [%.4f, %.4f]</span><span class="sc">\n</span><span class="st">&quot;</span>, fit2<span class="sc">$</span>ci[<span class="dv">1</span>], fit2<span class="sc">$</span>ci[<span class="dv">2</span>]))</span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="do">## The 95% CI is [-0.0103, 0.0398]</span></span></code></pre></div>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="do">## The 95% CI is [-0.0091, 0.0406]</span></span></code></pre></div>
 </div>
 </div>
 <div id="fusiomr_m-multi-outcome-mr-models-accounting-for-shared-pleiotropy" class="section level1">
@@ -454,24 +454,24 @@ illustration (exposure sample size = 300, outcome 1 sample size =
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Outcome 1:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="do">## Outcome 1:</span></span>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The causal effect estimate is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit3<span class="sc">$</span>est[<span class="dv">1</span>]))</span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.0486</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.0239</span></span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The standard error is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit3<span class="sc">$</span>se[<span class="dv">1</span>]))</span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="do">## The standard error is 0.0823</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="do">## The standard error is 0.0774</span></span>
 <span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The two-sided p-value is %.4g</span><span class="sc">\n</span><span class="st">&quot;</span>, fit3<span class="sc">$</span>pval[<span class="dv">1</span>]))</span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="do">## The two-sided p-value is 0.5547</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="do">## The two-sided p-value is 0.7572</span></span>
 <span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The 95%% CI is [%.4f, %.4f]</span><span class="sc">\n</span><span class="st">&quot;</span>, fit3<span class="sc">$</span>ci[<span class="dv">1</span>, <span class="dv">1</span>], fit3<span class="sc">$</span>ci[<span class="dv">1</span>, <span class="dv">2</span>]))</span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="do">## The 95% CI is [-0.1008, 0.2106]</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="do">## The 95% CI is [-0.1516, 0.1748]</span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a></span>
 <span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Outcome 2:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="do">## Outcome 2:</span></span>
 <span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The causal effect estimate is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit3<span class="sc">$</span>est[<span class="dv">2</span>]))</span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.0634</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.0376</span></span>
 <span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The standard error is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit3<span class="sc">$</span>se[<span class="dv">2</span>]))</span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="do">## The standard error is 0.0824</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="do">## The standard error is 0.0846</span></span>
 <span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The two-sided p-value is %.4g</span><span class="sc">\n</span><span class="st">&quot;</span>, fit3<span class="sc">$</span>pval[<span class="dv">2</span>]))</span>
-<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="do">## The two-sided p-value is 0.4416</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="do">## The two-sided p-value is 0.6568</span></span>
 <span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The 95%% CI is [%.4f, %.4f]</span><span class="sc">\n</span><span class="st">&quot;</span>, fit3<span class="sc">$</span>ci[<span class="dv">2</span>, <span class="dv">1</span>], fit3<span class="sc">$</span>ci[<span class="dv">2</span>, <span class="dv">2</span>]))</span>
-<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="do">## The 95% CI is [-0.0973, 0.2329]</span></span></code></pre></div>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="do">## The 95% CI is [-0.1542, 0.1990]</span></span></code></pre></div>
 </div>
 <div id="two-exposures-two-outcomes-memo" class="section level2">
 <h2>Two exposures, Two outcomes: <code>memo</code></h2>
@@ -497,24 +497,24 @@ causal effects <span class="math inline">\(\beta_1 = \beta_2 =
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Outcome 1:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="do">## Outcome 1:</span></span>
 <span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The causal effect estimate is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit4<span class="sc">$</span>est[<span class="dv">1</span>]))</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.2039</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.1937</span></span>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The standard error is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit4<span class="sc">$</span>se[<span class="dv">1</span>]))</span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="do">## The standard error is 0.0068</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="do">## The standard error is 0.0071</span></span>
 <span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The two-sided p-value is %.4g</span><span class="sc">\n</span><span class="st">&quot;</span>, fit4<span class="sc">$</span>pval[<span class="dv">1</span>]))</span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="do">## The two-sided p-value is 1.076e-195</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="do">## The two-sided p-value is 1.035e-163</span></span>
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The 95%% CI is [%.4f, %.4f]</span><span class="sc">\n</span><span class="st">&quot;</span>, fit4<span class="sc">$</span>ci[<span class="dv">1</span>, <span class="dv">1</span>], fit4<span class="sc">$</span>ci[<span class="dv">1</span>, <span class="dv">2</span>]))</span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="do">## The 95% CI is [0.1906, 0.2171]</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="do">## The 95% CI is [0.1800, 0.2077]</span></span>
 <span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a></span>
 <span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Outcome 2:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="do">## Outcome 2:</span></span>
 <span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The causal effect estimate is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit4<span class="sc">$</span>est[<span class="dv">2</span>]))</span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.1860</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="do">## The causal effect estimate is 0.1996</span></span>
 <span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The standard error is %.4f</span><span class="sc">\n</span><span class="st">&quot;</span>, fit4<span class="sc">$</span>se[<span class="dv">2</span>]))</span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="do">## The standard error is 0.0091</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="do">## The standard error is 0.0057</span></span>
 <span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The two-sided p-value is %.4g</span><span class="sc">\n</span><span class="st">&quot;</span>, fit4<span class="sc">$</span>pval[<span class="dv">2</span>]))</span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="do">## The two-sided p-value is 6.854e-93</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="do">## The two-sided p-value is 2.511e-268</span></span>
 <span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;The 95%% CI is [%.4f, %.4f]</span><span class="sc">\n</span><span class="st">&quot;</span>, fit4<span class="sc">$</span>ci[<span class="dv">2</span>, <span class="dv">1</span>], fit4<span class="sc">$</span>ci[<span class="dv">2</span>, <span class="dv">2</span>]))</span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="do">## The 95% CI is [0.1686, 0.2038]</span></span></code></pre></div>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="do">## The 95% CI is [0.1885, 0.2109]</span></span></code></pre></div>
 </div>
 </div>
 <div id="advanced-parameter-setting-parameter_control" class="section level1">
