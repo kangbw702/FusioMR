@@ -89,21 +89,8 @@ fit <- fusiomr(d$b_exp, d$se_exp, d$b_out, d$se_out,
 fit$est; fit$se; fit$pval; fit$ci
 ```
 
-For full examples covering all four models, advanced parameter tuning, and
-hybrid empirical-Bayes priors, see the
+For full examples covering all four models and advanced parameter tuning, see the
 [tutorial vignette](vignettes/FusioMR-tutorial.Rmd).
-
-## Simulation and Method Validation
-
-Simulation scripts used in the FusioMR paper, including data-generating
-functions and benchmarking pipelines, are available at
-[kangbw702/FusioMR-analysis](https://github.com/kangbw702/FusioMR-analysis):
-
-- [`dgf/`](https://github.com/kangbw702/FusioMR-analysis/tree/main/dgf) —
-  data-generating functions for individual-level and summary-level GWAS
-  with controllable pleiotropy.
-- [`simulation/`](https://github.com/kangbw702/FusioMR-analysis/tree/main/simulation) —
-  end-to-end simulation pipelines reproducing the paper results.
 
 ## Getting Help
 
@@ -113,9 +100,7 @@ functions and benchmarking pipelines, are available at
 ```
 
 ## Feedback
-
-This is a pre-release version actively under development. Please report
-bugs or suggest features via
+Please report bugs or suggest features via
 [GitHub Issues](https://github.com/kangbw702/FusioMR/issues)
 or contact the authors at
 [kbw@uchicago.edu](mailto:kbw@uchicago.edu),
