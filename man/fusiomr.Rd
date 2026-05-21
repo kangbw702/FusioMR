@@ -2,64 +2,60 @@
 % Please edit documentation in R/fusiomr.R
 \name{fusiomr}
 \alias{fusiomr}
-\title{FusioMR: Main Function for Mendelian Randomization Analysis}
+\title{FusioMR: A Flexible and unified MR framework using summary statistics for 
+single- and multi-outcome, tailored for molecular trait exposures 
+while also applicable to complex trait exposures.}
 \usage{
 fusiomr(
   b_exp,
   se_exp,
   b_out,
   se_out,
-  CHP = FALSE,
-  p_value_threshold = 0.001,
-  niter = 20000,
-  burnin_prop = 0.5
+  model = c("seso_uhp_only", "seso_with_chp", "semo", "memo"),
+  control = parameter_control(),
+  verbose = FALSE
 )
 }
 \arguments{
-\item{b_exp}{Numeric matrix or vector of effect estimates for instrumental variables
-on exposure. Must have exactly 1 column and same number of rows as other inputs.}
+\item{b_exp}{Numeric vector of SNP-exposure effect estimates.}
 
-\item{se_exp}{Numeric matrix or vector of standard errors for IV-exposure effect
-estimates. Must have exactly 1 column, same dimensions as b_exp, and all positive values.}
+\item{se_exp}{Numeric vector of standard errors of \code{b_exp}.}
 
-\item{b_out}{Numeric matrix or vector of effect estimates for instrumental variables
-on outcome(s). Must have 1 column (single outcome) or 2 columns (multiple outcomes),
-with same number of rows as b_exp.}
+\item{b_out}{Numeric vector of SNP-outcome effect estimates.}
 
-\item{se_out}{Numeric matrix or vector of standard errors for IV-outcome effect
-estimates. Must have same dimensions as b_out and all positive values.}
+\item{se_out}{Numeric vector of standard errors of \code{b_out}.}
 
-\item{CHP}{Logical indicating whether to include horizontal pleiotropy correction
-(default: FALSE).}
+\item{model}{Character string. One of \code{"seso_uhp_only"},
+\code{"seso_with_chp"}, \code{"semo"}, \code{"memo"}.}
 
-\item{p_value_threshold}{Numeric value between 0 and 1 for IV selection threshold
-(default: 1e-3). Used to filter instruments based on IV-exposure association strength.}
+\item{control}{A list of advanced prior hyper-parameters returned by
+\code{\link{parameter_control}}. Defaults are suitable for most uses.}
 
-\item{niter}{Positive integer specifying number of Gibbs sampling iterations
-(default: 20000).}
-
-\item{burnin_prop}{Numeric value between 0 and 1 specifying proportion of iterations
-  to discard as burn-in (default: 0.5).
-
-\itemize{
-  \item Model 1: Single Exposure Single Outcome (No Horizontal Pleiotropy)
-  \item Model 2: Single Exposure Single Outcome (With Horizontal Pleiotropy)
-  \item Model 3: Single Exposure Multiple Outcomes (No Horizontal Pleiotropy)
-  \item Model 4: Single Exposure Multiple Outcomes (With Horizontal Pleiotropy)
-}}
+\item{verbose}{Logical; if TRUE, print progress messages.}
 }
 \value{
-A list containing:
+A list with components
 \describe{
-  \item{est}{Numeric vector of posterior mean(s) of causal effect. Single value for
-    single outcome, vector of length 2 for multiple outcomes.}
-  \item{se}{Numeric vector of posterior standard error(s) of causal effect. Single value
-    for single outcome, vector of length 2 for multiple outcomes.}
-  \item{pval}{Numeric vector of p-value(s) for testing null hypothesis of no causal effect.
-    Single value for single outcome, vector of length 2 for multiple outcomes.}
+  \item{est}{causal effect estimation}
+  \item{se}{sd of the causal effect.}
+  \item{pval}{two-sided p-value}
+  \item{ci}{95\% empirical credible interval.}
+  \item{model}{The model used.}
 }
 }
 \description{
-A Flexible, Unified and verSatile Mendelian Randomization framework.
-Supports both single and multiple outcome analyses with optional horizontal pleiotropy.
+Main function of the FusioMR package. Offer robust estimates the causal effect
+of an exposure on an outcome from GWAS summary statistics, using Bayesian 
+hierarchical model and uses Gibbs sampling.
+}
+\examples{
+\dontrun{
+set.seed(1)
+K <- 50
+b_exp  <- rnorm(K, 0, 0.1);  se_exp <- rep(0.01, K)
+b_out  <- 0.3 * b_exp + rnorm(K, 0, 0.01); se_out <- rep(0.01, K)
+model <- fusiomr(b_exp, se_exp, b_out, se_out,
+               model = "seso_uhp_only")
+model$est; model$se; model$ci;
+}
 }
