@@ -11,7 +11,7 @@
 
 
 
-<title>README.knit</title>
+<title>README</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,67 +352,89 @@ display: none;
 </div>
 
 
-<div id="fusiomrdev" class="section level1">
-<h1>FusioMRdev</h1>
+<div id="fusiomr" class="section level1">
+<h1>FusioMR</h1>
 <blockquote>
 <p><strong>F</strong>lexible, <strong>U</strong>nified and
 ver<strong>S</strong>atile Mendel<strong>I</strong>an
 Rand<strong>O</strong>mization framework — <strong>dev</strong>elopment
 version.</p>
 </blockquote>
+<p><code>FusioMR</code> is the R implementation of FusioMR, a Bayesian
+hierarchical framework for single- and multi-outcome Mendelian
+randomization (MR) using GWAS summary statistics. It is designed
+primarily for molecular trait exposures (e.g., gene expression), where
+the number of available cis-QTLs as instrumental variables (IVs) is
+often limited and horizontal pleiotropy is pervasive. FusioMR is also
+applicable to complex trait exposures with a moderate-to-large number of
+IVs. For methodological details, please refer to <a href="https://doi.org/10.1016/j.ajhg.2026.03.017" class="uri">https://doi.org/10.1016/j.ajhg.2026.03.017</a>.</p>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>Requires <strong>R &gt;= 4.3.0</strong> and a working C++ compiler: -
-<strong>macOS</strong>: <code>xcode-select --install</code> -
-<strong>Windows</strong>: install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a></p>
+<p><code>FusioMR</code> requires <strong>R &gt;= 4.3.0</strong> and a
+working C++ compiler:</p>
+<ul>
+<li><strong>macOS</strong>: <code>xcode-select --install</code></li>
+<li><strong>Windows</strong>: install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a></li>
+</ul>
+<p>Install the development version from GitHub:</p>
 <pre class="r"><code># install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;fsh56/FusioMR-software&quot;)
-library(FusioMRdev)</code></pre>
-</div>
-<div id="quick-start" class="section level2">
-<h2>Quick Start</h2>
-<p>The input format mirrors that of <code>TwoSampleMR</code> and
-<code>MendelianRandomization</code>. You only need four
-summary-statistics vectors and a <code>model</code> name:</p>
-<pre class="r"><code>library(FusioMRdev)
-
-# Toy summary statistics: 80 SNPs, true causal effect = 0.3
-set.seed(42)
-K &lt;- 80
-b_exp  &lt;- rnorm(K, 0, 0.1);  se_exp &lt;- rep(0.01, K)
-b_out  &lt;- 0.3 * b_exp + rnorm(K, 0, 0.01); se_out &lt;- rep(0.01, K)
-
-fit &lt;- fusiomr(b_exp, se_exp, b_out, se_out,
-               model = &quot;seso_uhp_only&quot;)
-
-fit$est    # posterior mean of the causal effect
-fit$se     # posterior standard error
-fit$ci     # 95% empirical credible interval
-fit$pval   # two-sided p-value
-fit$n_iv   # number of selected IVs</code></pre>
-</div>
-<div id="main-function" class="section level2">
-<h2>Main Function</h2>
-<pre class="r"><code>fusiomr(b_exp, se_exp, b_out, se_out,
-        model   = &quot;seso_uhp_only&quot;,
-        control = parameter_control(),
-        verbose = TRUE)</code></pre>
-<p><strong>Arguments</strong></p>
+devtools::install_github(&quot;kangbw702/FusioMR&quot;)
+library(FusioMR)</code></pre>
+<div id="dependencies" class="section level3">
+<h3>Dependencies</h3>
+<p>The following R packages are pulled in automatically as
+dependencies:</p>
 <table>
 <colgroup>
-<col width="16%" />
-<col width="84%" />
+<col width="23%" />
+<col width="22%" />
+<col width="54%" />
 </colgroup>
 <thead>
 <tr class="header">
+<th>Package</th>
+<th>Minimum version</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Rcpp</code></td>
+<td>&gt;= 1.0.10</td>
+<td>R / C++ interface for the Gibbs samplers</td>
+</tr>
+<tr class="even">
+<td><code>RcppArmadillo</code></td>
+<td>&gt;= 0.12.0.0</td>
+<td>Linear algebra in the Gibbs samplers</td>
+</tr>
+<tr class="odd">
+<td><code>invgamma</code></td>
+<td>&gt;= 1.1</td>
+<td>Inverse-gamma sampling</td>
+</tr>
+</tbody>
+</table>
+<p>If <code>devtools::install_github()</code> fails to fetch them,
+install manually:</p>
+<pre class="r"><code>install.packages(c(&quot;Rcpp&quot;, &quot;RcppArmadillo&quot;, &quot;invgamma&quot;))</code></pre>
+</div>
+</div>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>The main entry point is <code>fusiomr()</code>, which takes four
+vectors of GWAS summary statistics:</p>
+<table>
+<thead>
+<tr class="header">
 <th>Argument</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><code>b_exp</code></td>
-<td>Numeric vector of SNP-exposure effect estimates</td>
+<td>IV–exposure effect estimates</td>
 </tr>
 <tr class="even">
 <td><code>se_exp</code></td>
@@ -420,42 +442,107 @@ fit$n_iv   # number of selected IVs</code></pre>
 </tr>
 <tr class="odd">
 <td><code>b_out</code></td>
-<td>Numeric vector of SNP-outcome effect estimates</td>
+<td>IV–outcome effect estimates</td>
 </tr>
 <tr class="even">
 <td><code>se_out</code></td>
 <td>Standard errors of <code>b_out</code></td>
 </tr>
+</tbody>
+</table>
+<p>All four must have the same length, and the input data should already
+be preprocessed (LD-clumped, IV-selected, harmonized).
+<code>FusioMR</code> does not perform data preprocessing.</p>
+<p><code>FusioMR</code> supports four models via the <code>model</code>
+argument. Pick the one that matches your data:</p>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="11%" />
+<col width="10%" />
+<col width="56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Exposure</th>
+<th>Outcome</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td><code>model</code></td>
-<td>One of <code>&quot;seso_uhp_only&quot;</code>, <code>&quot;seso_with_chp&quot;</code>,
-<code>&quot;semo&quot;</code>, <code>&quot;memo&quot;</code></td>
+<td><code>seso_uhp_only</code></td>
+<td>1</td>
+<td>1</td>
+<td>uncorrelated pleiotropy (UHP) is the concern</td>
 </tr>
 <tr class="even">
-<td><code>control</code></td>
-<td>Advanced settings from <code>parameter_control()</code></td>
+<td><code>seso_with_chp</code></td>
+<td>1</td>
+<td>1</td>
+<td>correlated pleiotropy (CHP) is the concern</td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
-<td>If <code>TRUE</code>, print progress messages</td>
+<td><code>semo</code></td>
+<td>1</td>
+<td>2</td>
+<td>one exposure, two outcomes</td>
+</tr>
+<tr class="even">
+<td><code>memo</code></td>
+<td>2</td>
+<td>2</td>
+<td>two exposures, two outcomes</td>
+</tr>
+</tbody>
+</table>
+<p>For <code>semo</code>, pass <code>b_out</code> / <code>se_out</code>
+as a <code>K x 2</code> matrix. For <code>memo</code>, pass
+<code>b_exp</code> / <code>se_exp</code> <strong>and</strong>
+<code>b_out</code> / <code>se_out</code> as <code>K x 2</code>
+matrices.</p>
+<p>The returned object is a list with the MR estimates:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Return</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>est</code></td>
+<td>Causal effect estimate</td>
+</tr>
+<tr class="even">
+<td><code>se</code></td>
+<td>Standard error</td>
+</tr>
+<tr class="odd">
+<td><code>pval</code></td>
+<td>Two-sided p-value</td>
+</tr>
+<tr class="even">
+<td><code>ci</code></td>
+<td>95% credible interval</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="advanced-usage" class="section level2">
-<h2>Advanced Usage</h2>
-<p>For most users, default settings are sufficient. To tune MCMC length,
-IV selection, or empirical-Bayes priors, pass a customized
-<code>parameter_control()</code>:</p>
-<pre class="r"><code>fit &lt;- fusiomr(b_exp, se_exp, b_out, se_out,
-               model = &quot;seso_uhp_only&quot;,
-               control = parameter_control(
-                 niter             = 30000,             # longer MCMC
-                 p_value_threshold = 1e-5,              # stricter IV selection
-                 z_thresh          = qnorm(1 - 5e-8/2), # winner&#39;s-curse correction
-                 rho_ov            = 0.2                # account for sample overlap
-               ))</code></pre>
-<p>See <code>?parameter_control</code> for all advanced options.</p>
+<div id="quick-start" class="section level2">
+<h2>Quick Start</h2>
+<pre class="r"><code>library(FusioMR)
+
+# Load an example dataset (single exposure, single outcome, UHP only)
+d &lt;- readRDS(&quot;examples/data/seso_uhp_only_example.rds&quot;)
+
+fit &lt;- fusiomr(d$b_exp, d$se_exp, d$b_out, d$se_out,
+               model = &quot;seso_uhp_only&quot;)
+
+fit$est; fit$se; fit$pval; fit$ci</code></pre>
+<p>For full examples covering all four models and advanced parameter
+tuning, see the <a href="examples/FusioMR-tutorial.Rmd">tutorial</a>.</p>
 </div>
 <div id="getting-help" class="section level2">
 <h2>Getting Help</h2>
@@ -464,9 +551,8 @@ IV selection, or empirical-Bayes priors, pass a customized
 </div>
 <div id="feedback" class="section level2">
 <h2>Feedback</h2>
-<p>This is a pre-release version actively under development. Please
-report bugs or suggest features via <a href="https://github.com/fsh56/FusioMR-software/issues">GitHub
-Issues</a> or contact the authors at <code>kbw@uchicago.edu</code>.</p>
+<p>Please report bugs or suggest features via <a href="https://github.com/kangbw702/FusioMR/issues">GitHub Issues</a> or
+contact the authors at <a href="mailto:kbw@uchicago.edu">kbw@uchicago.edu</a>, <a href="mailto:sfeng56@uchicago.edu">sfeng56@uchicago.edu</a>.</p>
 </div>
 <div id="license" class="section level2">
 <h2>License</h2>

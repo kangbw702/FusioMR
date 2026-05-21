@@ -90,7 +90,7 @@ fit$est; fit$se; fit$pval; fit$ci
 ```
 
 For full examples covering all four models and advanced parameter tuning, see the
-[tutorial vignette](vignettes/FusioMR-tutorial.Rmd).
+[tutorial](examples/FusioMR-tutorial.Rmd).
 
 ## Getting Help
 
