@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 library(FusioMR)
 ```
 
-This vignette demonstrates how to use `FusioMRdev` for single- and
+This vignette demonstrates how to use `FusioMR` for single- and
 multi-outcome Mendelian randomization with GWAS summary statistics.
 For installation instructions, package overview, and a description of
 input / output formats, see the

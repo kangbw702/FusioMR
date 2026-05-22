@@ -1,4 +1,4 @@
 library(testthat)
 library(FusioMR)
 
-test_check("FusioMRdev")
+test_check("FusioMR")

@@ -2,10 +2,10 @@
 # ---- 0. setup --------------------------------------------------------------
 
 # Working directory should be examples/. Adjust if running from elsewhere.
-setwd("~/FusioMR-software/examples")
+setwd("~/FusioMR/examples")
 
 library(Rcpp)
-# Compile fastSigLm once. This is independent of the FusioMRdev package.
+# Compile fastSigLm once. This is independent of the FusioMR package.
 Rcpp::sourceCpp("dgm/fastlm.cpp")
 
 # Source the data-generating functions.

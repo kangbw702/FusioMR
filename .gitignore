@@ -1,6 +1,7 @@
-.Rproj.user
+.Rproj.user/
 .Rhistory
-.Rdata
-.httr-oauth
 .DS_Store
-.quarto
+.RData
+src/*.o
+src/*.so
+examples/*.html
