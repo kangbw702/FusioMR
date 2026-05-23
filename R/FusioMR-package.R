@@ -11,5 +11,6 @@
 #' @aliases FusioMR
 #' @useDynLib FusioMR, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
+#' @importFrom invgamma rinvgamma
 #' @importFrom stats pnorm qnorm quantile sd median dnorm
 NULL
