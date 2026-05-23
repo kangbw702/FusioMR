@@ -16,3 +16,4 @@ gibbs_seso_uhp_only_cpp <- function(niter, K, beta_tk, theta_tk, gamma_tk, sigma
 gibbs_seso_with_chp_cpp <- function(niter, K, beta_tk, alpha_tk, eta_tk, theta_tk, gamma_tk, q_tk, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_gamma, sigma2_gamma_tk, sigma2_theta_tk, a_gamma, b_gamma, a_theta, b_theta, a_q, b_q) {
     .Call(`_FusioMR_gibbs_seso_with_chp_cpp`, niter, K, beta_tk, alpha_tk, eta_tk, theta_tk, gamma_tk, q_tk, Gamma_hat, gamma_hat, s2_hat_Gamma, s2_hat_gamma, sigma2_gamma_tk, sigma2_theta_tk, a_gamma, b_gamma, a_theta, b_theta, a_q, b_q)
 }
+
