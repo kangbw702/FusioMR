@@ -316,7 +316,7 @@ set_variance_priors_m2 <- function(ghat,
 #' @param rho_gj List of length 2; element j is c(rho_g1_outj, rho_g2_outj),
 #'   the sampling correlations between exposure j and the two outcomes.
 #' @param c_gamma,c_theta Prior weights per IV.
-#' @param global_mean_gamma,global_mean_theta Optional EB centers (hybrid).
+#' @param global_Sigma_gamma, global_Sigma_theta Optional 2x2 EB center matrices (hybrid).
 #' @param hybrid Logical; enable hybrid EB if TRUE.
 #' @param kappa_hybrid Pooling strength for hybrid mode.
 #' @param z_thresh Optional |Z| selection threshold (winner's-curse fix).
