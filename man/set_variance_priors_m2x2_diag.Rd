@@ -51,6 +51,8 @@ the sampling correlations between exposure j and the two outcomes.}
 
 \item{c_gamma, c_theta}{Prior weights per IV.}
 
+\item{global_Sigma_gamma, }{global_Sigma_theta Optional 2x2 EB center matrices (hybrid).}
+
 \item{hybrid}{Logical; enable hybrid EB if TRUE.}
 
 \item{kappa_hybrid}{Pooling strength for hybrid mode.}
@@ -60,8 +62,6 @@ the sampling correlations between exposure j and the two outcomes.}
 \item{trim}{Tail probability for winsorized moments.}
 
 \item{kappa_gamma, kappa_theta}{Conservative inflation multipliers (>=1).}
-
-\item{global_mean_gamma, global_mean_theta}{Optional EB centers (hybrid).}
 }
 \value{
 A list with sublists \code{gamma} (nu, Phi, prior_mean — a 2x2
