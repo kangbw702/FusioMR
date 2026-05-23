@@ -52,6 +52,6 @@ test_that("hybrid = TRUE raises a clear error", {
     fusiomr(b_exp, se_exp, b_out, se_out,
             model = "seso_uhp_only",
             control = parameter_control(hybrid = TRUE)),
-    "not yet implemented"
+    "requires both"
   )
 })
