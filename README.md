@@ -3,7 +3,8 @@
 > **F**lexible, **U**nified and ver**S**atile Mendel**I**an Rand**O**mization framework.
 
 `FusioMR` is the R implementation of FusioMR, a Bayesian hierarchical framework for single- and multi-outcome Mendelian randomization (MR) using GWAS summary statistics. 
-It is designed primarily for molecular trait exposures (e.g., gene expression), where the number of available cis-QTLs as instrumental variables (IVs) is often limited and horizontal pleiotropy is pervasive. FusioMR is also applicable to complex trait exposures with a moderate-to-large number of IVs. For methodological details, please refer to https://doi.org/10.1016/j.ajhg.2026.03.017.
+It is designed primarily for molecular trait exposures (e.g., gene expression), where the number of available cis-QTLs as instrumental variables (IVs) is often limited and horizontal pleiotropy is pervasive. 
+FusioMR is also applicable to complex trait exposures. For methodological details, please refer to https://doi.org/10.1016/j.ajhg.2026.03.017.
 
 ## Installation
 
