@@ -147,7 +147,7 @@ cat(sprintf("Saved semo_example.rds : %d IVs selected, true betas = (%.2f, %.2f)
             semo_data$n_iv, semo_data$true_beta[1], semo_data$true_beta[2]))
 
 # ---- 4. memo (two exposures, two outcomes) ---------------------------------
-set.seed(4)
+set.seed(6)
 P_CUTOFF_MEMO <- 1e-5
 
 params_memo <- list(
@@ -204,7 +204,7 @@ memo_data <- list(
   params    = params_memo,
   p_cutoff  = P_CUTOFF_MEMO,
   n_iv      = sum(sel4),
-  seed      = 4
+  seed      = 6
 )
 
 saveRDS(memo_data, file = "data/memo_example.rds")
